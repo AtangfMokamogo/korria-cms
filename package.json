@@ -1,0 +1,11 @@
+{
+  "name": "korria-cms",
+  "version": "1.0.0",
+  "description": "A minimal headless Content Management System",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Atang Fino Mokamogo",
+  "license": "MIT"
+}
