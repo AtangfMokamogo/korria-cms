@@ -1,20 +1,10 @@
 require('dotenv').config();
 const express = require('express');
-const mongoose = require('mongoose');
+const { dbConnect } = require('./utils/db.mongo');
 const authRoutes = require('./routes/auth.routes');
+const projectRoutes = require('./routes/project.routes');
 
-try {
-  mongoose.connect('mongodb://localhost:27017/korriadb', {
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
-  });
-  console.log('connected to db');
-} catch (error) {
-  console.error(error);
-}
-process.on('unhandledRejection', (error) => {
-  console.log('unhandledRejection', error.message);
-});
+dbConnect();
 const app = express();
 
 // parse requests of content-type - application/json
@@ -26,6 +16,7 @@ app.use(express.urlencoded({
 
 /** Routes */
 app.use(authRoutes);
+app.use(projectRoutes);
 // setup server to listen on port 8080
 app.listen(process.env.PORT || 8080, () => {
   console.log('Server is live on port 8080');

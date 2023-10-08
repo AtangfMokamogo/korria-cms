@@ -52,7 +52,7 @@ class AuthController {
     }
 
     const userToken = jwt.sign(
-      { firstname: user.firstname, email: user.email },
+      { firstname: user.fullname, email: user.email },
       process.env.KORRIA_TOKENIZER_SECRET,
       { expiresIn: '24h' },
     );
