@@ -15,7 +15,6 @@ class ProjectController {
       createdby: req.user.email,
     });
 
-    console.log(req.user.firstname);
     /** Attempt to save the new project to database */
     project.save(project).then(
       (data) => {
