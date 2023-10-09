@@ -15,6 +15,19 @@ async function getParams(req, res, next) {
   next();
 }
 
+/**
+ * This middleware processes query parameters for the getOrderByID route
+ */
+async function getQueryId(req, res, next) {
+  const { id } = req.query;
+  if (!id) {
+    res.status(400).send({ message: 'Query string has no ID parameter' });
+  } else {
+    req.id = id;
+  }
+  next();
+}
 module.exports = {
   getParams,
+  getQueryId,
 };

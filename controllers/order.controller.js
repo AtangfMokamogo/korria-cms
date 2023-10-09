@@ -1,4 +1,5 @@
 const Order = require('../models/order');
+const Project = require('../models/project');
 
 /**
  * Implements controllers that create, manage and removes orders
@@ -10,14 +11,19 @@ class OrderController {
     * This function creates a new order
     */
   static async newOrder(req, res) {
-    /** get order options from req and email from the req.user  */
+    /** Ensure project name supplied is in existence */
+    const getProject = await Project.find({ name: req.name });
+    if (getProject.length === 0) {
+      res.status(400).send({ message: `cannot create order ${req.body.name} in project ${req.name}`, error: 'Project doesnt exists' });
+    }
+
     const order = new Order({
       name: req.body.name,
-      tags: [req.body.tags || `#${req.body.name}`],
+      tags: [...req.body.tags || `#${req.body.name}`],
       project: req.name,
       createdby: req.user.email,
     });
-    /** save the info to databse and return the details */
+    /** save the info to database and return the details */
 
     order.save(order).then(
       (data) => {
@@ -37,6 +43,45 @@ class OrderController {
         console.error('Error in newOrder function', error);
       },
     );
+  }
+
+  /**
+   * This function retrievs a collection of orders based on a tag
+   */
+  static async getOrderByTags(req, res) {
+    try {
+      const query = req.body.tags;
+      if (query) {
+        const orders = await Order.find({ tags: { $in: [...query] } });
+
+        if (orders.length !== 0) {
+          res.status(201).json(orders);
+        } else {
+          res.status(205).send({ message: `No Orders Associated With Tags: ${req.body.tags}` });
+        }
+      }
+    } catch (error) {
+      console.error('Error in getOrderByTags: ', error);
+      res.status(500);
+    }
+  }
+
+  /**
+   * This function retrives an Order by its ID
+   */
+  static async getOrderById(req, res) {
+    try {
+      const order = await Order.findById(req.id);
+
+      if (order) {
+        res.status(201).send(order);
+      } else {
+        res.status(205).send({ message: `No Order of ${req.id}` });
+      }
+    } catch (error) {
+      console.error('Error in getOrderById', error);
+      res.status(500);
+    }
   }
 }
 
