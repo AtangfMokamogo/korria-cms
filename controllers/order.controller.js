@@ -83,6 +83,21 @@ class OrderController {
       res.status(500);
     }
   }
+
+  /**
+   * This function deletes and order by its id
+   */
+  static async removeOrderById(req, res) {
+    try {
+      const deleted = await Order.deleteOne({ _id: req.body.id });
+      if (deleted) {
+        res.status(201).send({ status: 'Success', message: `Deleted: ${deleted.deletedCount} Orders of ID: ${req.body.id}` });
+      }
+    } catch (error) {
+      console.error('error in deleteOrderById', error);
+      res.status(500);
+    }
+  }
 }
 
 module.exports = OrderController;

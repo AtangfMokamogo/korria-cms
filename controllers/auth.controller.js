@@ -22,10 +22,20 @@ class AuthController {
     /** Attempt to save the new user to database */
     user.save(user).then(
       (result) => {
-        res.status(201).send({ message: 'User Registered Succesfully', date: result.created });
+        console.log(result);
+        res.status(201).send({
+          status: 'Success',
+          created_at: result.created,
+          id: result._id,
+          email: result.email,
+          role: result.role,
+        });
       },
     ).catch(
       (error) => {
+        if (error.code === 11000) {
+          res.status(400).send({ message: 'Failed', status: `email ${req.body.email} exists` });
+        }
         res.status(500).send({ message: error });
       },
     );
@@ -38,7 +48,7 @@ class AuthController {
   static async signin(req, res) {
     const user = await User.findOne({ email: req.body.email });
     if (!user) {
-      res.status(404).send({ message: 'User Not Found' });
+      res.status(401).send({ status: 'Failed', message: `email: ${req.body.email} is not registered` });
     }
 
     /** Validate password and issue token if valid */
@@ -46,8 +56,9 @@ class AuthController {
 
     if (!isPasswordValid) {
       return res.status(401).send({
-        token: null,
+        status: 'Failed',
         message: 'Password Invalid!',
+        token: null,
       });
     }
 
@@ -57,12 +68,13 @@ class AuthController {
       { expiresIn: '24h' },
     );
     return res.status(200).send({
+      status: 'Success',
+      message: 'User Logged in',
+      token: userToken,
       User: {
         name: user.fullname,
         email: user.email,
       },
-      message: 'Successful Login',
-      token: userToken,
     });
   }
 }

@@ -17,6 +17,7 @@ async function getParams(req, res, next) {
 
 /**
  * This middleware processes query parameters for the getOrderByID route
+ * @todo: this will block the request if id is not passed as query param
  */
 async function getQueryId(req, res, next) {
   const { id } = req.query;
