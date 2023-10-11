@@ -7,6 +7,7 @@ const { dbConnect } = require('./utils/db.mongo');
 const authRoutes = require('./routes/auth.routes');
 const projectRoutes = require('./routes/project.routes');
 const orderRoutes = require('./routes/order.routes');
+const parcelRoutes = require('./routes/parcel.routes');
 
 dbConnect();
 const app = express();
@@ -55,6 +56,7 @@ app.use(express.urlencoded({
 app.use(authRoutes);
 app.use(projectRoutes);
 app.use(orderRoutes);
+app.use(parcelRoutes);
 
 // setup server to listen on port 8080
 app.listen(process.env.PORT || 8080, () => {

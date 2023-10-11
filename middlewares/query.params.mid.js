@@ -10,7 +10,7 @@ async function getParams(req, res, next) {
   if (!projectname) {
     res.status(400).send({ message: 'Project name not supplied. Check URL' });
   } else {
-    req.name = projectname;
+    req.project = projectname;
   }
   next();
 }
