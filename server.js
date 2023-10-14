@@ -8,6 +8,7 @@ const authRoutes = require('./routes/auth.routes');
 const projectRoutes = require('./routes/project.routes');
 const orderRoutes = require('./routes/order.routes');
 const parcelRoutes = require('./routes/parcel.routes');
+const typeRoutes = require('./routes/type.routes');
 
 dbConnect();
 const app = express();
@@ -57,6 +58,7 @@ app.use(authRoutes);
 app.use(projectRoutes);
 app.use(orderRoutes);
 app.use(parcelRoutes);
+app.use(typeRoutes);
 
 // setup server to listen on port 8080
 app.listen(process.env.PORT || 8080, () => {
