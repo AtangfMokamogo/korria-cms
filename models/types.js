@@ -19,6 +19,10 @@ const imageTypeSchema = new Schema({
     type: String,
     required: [true, 'Image alt text not define'],
   },
+  project: {
+    type: String,
+    required: [true, 'Image project name not defined'],
+  },
   order: {
     type: String,
   },
@@ -40,7 +44,16 @@ const textTypeSchema = new Schema({
   },
   payload: {
     type: String,
-    required: [true, 'Image slug not defined'],
+    required: [true, 'Text payload not defined'],
+  },
+  tags: {
+    type: [String],
+  },
+  project: {
+    type: String,
+  },
+  order: {
+    type: String,
   },
   createdon: {
     type: Date,
@@ -49,5 +62,5 @@ const textTypeSchema = new Schema({
 
 });
 
-module.exports = mongoose.model('ImageType', imageTypeSchema);
-// module.exports = mongoose.model('TextType', textTypeSchema);
+module.exports = mongoose.model('ImageField', imageTypeSchema);
+module.exports = mongoose.model('TextType', textTypeSchema);

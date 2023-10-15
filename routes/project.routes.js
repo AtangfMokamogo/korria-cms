@@ -4,7 +4,7 @@ const verifyToken = require('../middlewares/auth.mid');
 
 const router = express.Router();
 
-router.post('/new', verifyToken, ProjectController.newProject);
+router.post('/new-project', verifyToken, ProjectController.newProject);
 router.get('/user-projects', verifyToken, ProjectController.getProjects);
 router.get('/delete-project', verifyToken, ProjectController.deleteProject);
 

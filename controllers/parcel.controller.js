@@ -60,7 +60,7 @@ class ParcelController {
     /** Return all projects */
     try {
       const parcels = await Parcel.find({ project: req.project });
-      if (parcels.lenth === 0) {
+      if (parcels.length === 0) {
         res.send({ status: 'Success', message: 'There no parcels to show' });
       }
       res.status(200).send(parcels);
