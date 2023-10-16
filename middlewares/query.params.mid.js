@@ -22,7 +22,11 @@ async function getParams(req, res, next) {
 async function getQueryId(req, res, next) {
   const { id } = req.query;
   if (!id) {
-    res.status(400).send({ message: 'Query string has no ID parameter' });
+    res.status(400).send({
+      status: 'Failed',
+      error: 'Query String has no ID parameter',
+      message: 'check the query parameters for a missing ID',
+    });
   } else {
     req.id = id;
   }

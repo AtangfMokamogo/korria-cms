@@ -34,7 +34,7 @@ class AuthController {
     ).catch(
       (error) => {
         if (error.code === 11000) {
-          res.status(400).send({ message: 'Failed', status: `email ${req.body.email} exists` });
+          res.status(400).send({ status: 'Failed', message: `email ${req.body.email} exists` });
         }
         res.status(500).send({ message: error });
       },

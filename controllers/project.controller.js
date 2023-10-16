@@ -20,12 +20,10 @@ class ProjectController {
       (data) => {
         res.status(201).send({
           message: 'project added succesfully!',
-          details: {
-            name: `Project: ${data.name}`,
-            createdby: data.createdby,
-            date: data.createdon,
-            id: data._id,
-          },
+          name: `Project: ${data.name}`,
+          createdby: data.createdby,
+          date_created: data.createdon,
+          project_id: data._id,
         });
       },
     ).catch(
@@ -40,10 +38,9 @@ class ProjectController {
    * This Function retrieves all projects created by an associated user
    */
   static async getProjects(req, res) {
-    /** First extract */
     try {
       const projects = await Project.find({ createdby: req.user.email }).sort({ createdon: -1 });
-      res.status(201).json(projects);
+      res.status(201).json({ projects });
     } catch (error) {
       console.error('error in getProjects', error);
       res.status(500).send({ message: 'Internal Server Error' });
@@ -53,16 +50,29 @@ class ProjectController {
   static async deleteProject(req, res) {
     try {
       /** find a project by the specified project name and delete it */
-      const results = await Project.deleteOne({ _id: req.body._id, name: req.body.name });
-      if (results !== 0) {
+      /** check for missing fields */
+      if (!req.body.project || !req.body.id) {
+        res.status(400).send({
+          status: 'Failed',
+          error: 'Missing parameters in request',
+          message: 'id or project fields missing',
+        });
+      }
+      const results = await Project.deleteOne({
+        _id: req.body.id,
+        name: req.body.project,
+      });
+      if (results.deletedCount !== 0) {
         res.status(201).send({
-          message: `Project ${req.body.name}: Deleted Successfully`,
+          status: 'Success',
+          message: `Project ${req.body.project}: Deleted Successfully`,
           user: req.user.email,
           date: Date.now,
         });
       } else {
         res.status(200).send({
-          error: `Project ${req.body.name} of ID: ${req.body._id}. Is not available`,
+          status: 'Failed',
+          error: `Project ${req.body.project} of ID: ${req.body.id}. Is not available`,
           message: 'Could not find project to delete',
         });
       }

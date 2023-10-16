@@ -17,6 +17,9 @@ async function verifyToken(req, res, next) {
     if (error.message === 'jwt expired') {
       res.status(403).send({ message: 'Token expired please login again' });
     }
+    if (error.message === 'invalid signature') {
+      res.status(403).send({ status: 'Failed', message: error.message });
+    }
     if (error.message === 'invalid token') {
       res.status(403).send({ status: 'Failed', message: error.message });
     }

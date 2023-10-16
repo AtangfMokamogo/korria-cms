@@ -12,15 +12,19 @@ class OrderController {
     */
   static async newOrder(req, res) {
     /** Ensure project name supplied is in existence */
-    const getProject = await Project.find({ name: req.name });
+    const getProject = await Project.find({ name: req.project });
     if (getProject.length === 0) {
-      res.status(400).send({ message: `cannot create order ${req.body.name} in project ${req.name}`, error: 'Project doesnt exists' });
+      res.status(400).send({
+        status: 'Failed',
+        error: 'Project does not exists',
+        message: `cannot create order ${req.body.name} in an unavailable project`,
+      });
     }
 
     const order = new Order({
       name: req.body.name,
       tags: [...req.body.tags || `#${req.body.name}`],
-      project: req.name,
+      project: req.project,
       createdby: req.user.email,
     });
     /** save the info to database and return the details */
@@ -29,12 +33,13 @@ class OrderController {
       (data) => {
         res.status(201).send({
           message: 'collection added succesfully!',
-          details: {
-            name: `Order: ${data.name}`,
-            createdby: data.createdby,
-            date: data.createdon,
-            id: data._id,
-          },
+
+          name: `Order: ${data.name}`,
+          project: data.project,
+          createdby: data.createdby,
+          date: data.createdon,
+          id: data._id,
+
         });
       },
     ).catch(
@@ -55,9 +60,16 @@ class OrderController {
         const orders = await Order.find({ tags: { $in: [...query] } });
 
         if (orders.length !== 0) {
-          res.status(201).json(orders);
+          res.status(200).json({
+            status: 'Success',
+            orders,
+          });
         } else {
-          res.status(205).send({ message: `No Orders Associated With Tags: ${req.body.tags}` });
+          res.status(201).send({
+            status: 'Failed',
+            error: 'Order does not exist',
+            message: `No Orders Associated With Tags: ${req.body.tags}`,
+          });
         }
       }
     } catch (error) {
@@ -71,12 +83,18 @@ class OrderController {
    */
   static async getOrderById(req, res) {
     try {
-      const order = await Order.findById(req.id);
+      const orders = await Order.findById(req.id);
 
-      if (order) {
-        res.status(201).send(order);
+      if (orders) {
+        res.status(200).send({
+          status: 'Success',
+          orders: [orders],
+        });
       } else {
-        res.status(205).send({ message: `No Order of ${req.id}` });
+        res.status(200).send({
+          status: 'Failed',
+          message: `No Order of ${req.id}`,
+        });
       }
     } catch (error) {
       console.error('Error in getOrderById', error);
@@ -85,17 +103,31 @@ class OrderController {
   }
 
   /**
-   * This function deletes and order by its id
+   * This function deletes an order by its id
    */
   static async removeOrderById(req, res) {
     try {
-      const deleted = await Order.deleteOne({ _id: req.body.id });
-      if (deleted) {
-        res.status(201).send({ status: 'Success', message: `Deleted: ${deleted.deletedCount} Orders of ID: ${req.body.id}` });
+      const deleted = await Order.deleteOne({ _id: req.id });
+      if (deleted.deletedCount > 0) {
+        res.status(200).send({
+          status: 'Success',
+          message: `Deleted: ${deleted.deletedCount} Orders of ID: ${req.id}`,
+        });
       }
+      res.status(200).send({
+        status: 'Failed',
+        error: 'Order associated with id does not exists',
+        message: `Deleted: ${deleted.deletedCount} Orders of ID: ${req.id}`,
+      });
     } catch (error) {
-      console.error('error in deleteOrderById', error);
-      res.status(500);
+      if (error.kind === 'ObjectId') {
+        res.status(400).send({
+          status: 'Failed',
+          message: 'Check your ID',
+        });
+      }
+      console.error('error in deleteOrderById controller', error);
+      res.status(400);
     }
   }
 }

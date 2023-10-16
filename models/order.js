@@ -9,7 +9,7 @@ const { Schema } = mongoose;
 const orderSchema = new Schema({
   name: {
     type: String,
-    required: [true, 'Collection'],
+    required: [true, 'Collection name missing'],
   },
   tags: {
     type: [String],

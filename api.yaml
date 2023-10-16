@@ -1,0 +1,863 @@
+openapi: 3.0.0
+info:
+  title: Korria Headless CMS API
+  description: This documnetations has an api description
+  version: 0.0.1
+
+servers:
+  - url: http://localhost:8080/api/v1/users
+    description: The main API server
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+paths:
+  /register:
+    post:
+      summary: Account registration
+      tags:
+        - Authentication and Authorisation
+      description: This endpoint allows users to create a Korria Account.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fullname:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - fullname
+                - email
+                - password
+      responses:
+        '201':
+          description: Created a new User
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Success"
+                  created_at:
+                    type: string
+                    example: "2023-10-16T15:24:15.011Z"
+                  id:
+                    type: string
+                    example: "652d559f0daa229070f6c169"
+                  email:
+                    type: string
+                    example: "test@mail.com"
+                  role:
+                    type: string
+                    example: "admin"
+        
+        '400':
+          description: Error provided email exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "email test@mail.com exists"
+
+  /login:
+    post:
+      summary: User Login
+      tags:
+        - Authentication and Authorisation
+      description: This endpoint logs a user into the api generating a token for them
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: Logged in Succesfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Success"
+                  message:
+                    type: string
+                    example: "User Logged In"
+                  token:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdG5hbWUiOiJMYXdkIFB1bGxpeCIsImVtYWlsIjoibGF3ZGRAbWFpbDMiLCJpYXQiOjE2OTc0Njk0MjksImV4cCI6MTY5NzU1NTgyOX0.JTGCMy_2KTHn8aWT1jYLBX-0ntPsiSiGTrsXUsz1UdE"
+                  user:
+                    type: object
+                    example: { "name": "ALX USER", "email": "alxuser@mail.com" }
+
+  /projects/new_project:
+    post:
+      summary: Create a new Korria Project
+      tags:
+        - Project Creation and Management
+      description: This endpoint allows users to create a new Korria Project a project houses all content and collections of content(orders).
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+              required:
+                - name
+      responses:
+        '201':
+          description: Created a new project
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "project added succesfully!"
+                  name:
+                    type: string
+                    example: "Project: <project name>"
+                  createdby:
+                    type: string
+                    example: "alx@mail.com"
+                  date-created:
+                    type: string
+                    example: "2023-10-16T16:44:00.697Z"
+                  project-id:
+                    type: string
+                    example: "652d6850658e3bad181b9b54"
+        
+        '401':
+          description: Missing Auth Headers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Missing token"
+        '403':
+          description: Invalid Auth Token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Missing token"
+        '402':
+          description: Expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "token expired please log in again"
+
+  /projects/user_projects:
+    get:
+      summary: Retrieves all projects created by user
+      tags:
+        - Project Creation and Management
+      description: This endpoint allows a user to view all projects under their account
+      security:
+        - bearerAuth: []
+      responses:
+        '201':
+          description: Created a new project
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  projects:
+                    type: object
+                    example: {
+                      "projects": [
+                        {
+                          "_id": "652d696b730292469ea3c39e",
+                          "name": "some-other",
+                          "createdby": "lawdd@mail3",
+                          "permissions": "Admin",
+                          "createdon": "2023-10-16T16:48:43.487Z",
+                          "__v": 0
+                        }
+                      ]
+                    }
+        '401':
+          description: Missing Auth Headers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Missing token"
+        '403':
+          description: Invalid Auth Token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Missing token"
+        '402':
+          description: Expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "token expired please log in again"
+
+  /projects/delete_project:
+    get:
+      summary: Removes a project by its passed ID
+      tags:
+        - Project Creation and Management
+      description: This endpoint allows a user to delete projects under their account by their id
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                project:
+                  type: string
+              required:
+                - id
+                - project
+      responses:
+        '200':
+          description: Deleted the project of the passed ID and Name
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: Success
+                  message:
+                    type: string
+                    example: "Project ALX-Website: Deleted Succesfully"
+                  user:
+                    type: string
+                    example: "LawdPullix"
+        '202':
+          description: No Project of ID or Name to delete
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: Failed
+                  error:
+                    type: string
+                    example: "Project ALX-Website of ID: 65246faa24925f74f1e7e733. Is not available"
+                  message:
+                    type: string
+                    example: "Could not find project to delete"
+        '400':
+          description: Missing parameters in the request body
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  error:
+                    type: string
+                    example: "Missing Parameters in Request "
+                  message:
+                    type: string
+                    example: "ID or Project fields missing"
+        '401':
+          description: Missing Auth Headers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Missing token"
+        '403':
+          description: Invalid Auth Token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Missing token"
+        '402':
+          description: Expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "token expired please log in again"
+
+  /projects/{projectname}/orders/new:
+    post:
+      summary: creates a new collection of content tupes
+      tags:
+        - Content Collections Creation and Management
+      description: This endpoint allows a user to delete projects under their account by their id
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: projectname
+          required: true
+          schema:
+            type: string
+            minimum: 1
+          description: provide the project name where the order will be created
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                tags:
+                  type: array
+                  items:
+                    type: string
+              required:
+                - name
+      responses:
+        '201':
+          description: A new order has been created on project passed in url path
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: Success
+                  message:
+                    type: string
+                    example: "Project ALX-Website: Deleted Succesfully"
+                  user:
+                    type: string
+                    example: "LawdPullix"
+        '400':
+          description:  Project does not exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  error:
+                    type: string
+                    example: "Project does not exists"
+                  message:
+                    type: string
+                    example: "cannot create order Blog Post in an unavailable project"
+        '401':
+          description: Missing Auth Headers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Missing token"
+        '403':
+          description: Invalid Auth Token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Missing token"
+        '402':
+          description: Expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "token expired please log in again"
+
+  /projects/{projectname}/orders/get_tagged:
+    post:
+      summary: retrieves a collection of content types by their tags
+      tags:
+        - Content Collections Creation and Management
+      description: This endpoint allows a user to retrieve orders under their account by their tags
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: projectname
+          required: true
+          schema:
+            type: string
+            minimum: 1
+          description: provide the project name where the order will be created
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tags:
+                  type: array
+                  items:
+                    type: string
+              required:
+                - tags
+      responses:
+        '200':
+          description: A list of Orders associated with the provided tags
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: Success
+                  orders:
+                    type: array
+                    items:
+                      type: object
+                    example: { 
+                      status: "Success",
+                      orders: [
+                                {
+                                   "_id": "652d9944ca3a089c6f054bca",
+                                   "name": "tagged",
+                                   "tags": [
+                                      "homepage",
+                                      "New"
+                                    ],
+                                    "project": "appa",
+                                    "createdby": "lawdd@mail3",
+                                    "parcels": [],
+                                    "permissions": "Admin",
+                                    "createdon": "2023-10-16T20:12:52.837Z",
+                                    "__v": 0
+                                }
+                              ]
+                    }
+        '201':
+          description: No order associated with the provided tags
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: Failed
+                  error:
+                    type: string
+                    example: "Order does not exists"
+                  message:
+                    type: string
+                    example: "No Orders associated with the provided tags"
+        '400':
+          description:  Project does not exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  error:
+                    type: string
+                    example: "Project does not exists"
+                  message:
+                    type: string
+                    example: "cannot create order Blog Post in an unavailable project"
+        '401':
+          description: Missing Auth Headers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Missing token"
+        '403':
+          description: Invalid Auth Token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Missing token"
+        '402':
+          description: Expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "token expired please log in again"
+
+  /projects/{projectname}/orders/get_id:
+    get:
+      summary: retrieves a collection of content types by their id
+      tags:
+        - Content Collections Creation and Management
+      description: This endpoint allows a user to retrieve orders under their account by their id
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: id
+          schema:
+            type: string
+          description: provide the id associated with the order/s
+        - in: path
+          name: projectname
+          required: true
+          schema:
+            type: string
+            minimum: 1
+          description: provide the project name where the order was created
+      responses:
+        '200':
+          description: A list of Orders associated with the provided id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: Success
+                  orders:
+                    type: array
+                    items: 
+                      type: object
+                    example: { 
+                      status: "Success",
+                      orders: [
+                                {
+                                   "_id": "652d9944ca3a089c6f054bca",
+                                   "name": "tagged",
+                                   "tags": [
+                                      "homepage",
+                                      "New"
+                                    ],
+                                    "project": "appa",
+                                    "createdby": "lawdd@mail3",
+                                    "parcels": [],
+                                    "permissions": "Admin",
+                                    "createdon": "2023-10-16T20:12:52.837Z",
+                                    "__v": 0
+                                }
+                              ]
+                    }
+
+        '400':
+          description:  Query string empty
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  error:
+                    type: string
+                    example: "Query string has no ID parameter"
+                  message:
+                    type: string
+                    example: "Check if you provided the correct ID or if query string has ID property"
+        '401':
+          description: Missing Auth Headers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Missing token"
+        '403':
+          description: Invalid Auth Token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Missing token"
+        '402':
+          description: Expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "token expired please log in again"
+        '404':
+          description: No order associated with the provided id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: Failed
+                  error:
+                    type: string
+                    example: "Order does not exists"
+                  message:
+                    type: string
+                    example: "No Orders associated with the provided id"
+
+  /projects/{projectname}/orders/delete_order:
+    get:
+      summary: Deletes an order of content types
+      tags:
+        - Content Collections Creation and Management
+      description: This endpoint allows a user to delete orders under their account by its id
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: id
+          schema:
+            type: string
+          description: provide the id associated with the order/s
+        - in: path
+          name: projectname
+          required: true
+          schema:
+            type: string
+            minimum: 1
+          description: provide the project name where the order was created
+      responses:
+        '200':
+          description: State of deletion
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: Success
+                  orders:
+                    type: array
+                    items: 
+                      type: object
+                    example: { 
+                      status: "Success",
+                      message: "Deleted: 1 Orders of ID: 6523bdf52125882953cbe2bd"
+                    }
+
+        '400':
+          description:  Query string empty
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  error:
+                    type: string
+                    example: "Query string has no ID parameter"
+                  message:
+                    type: string
+                    example: "Check if you provided the correct ID or if query string has ID property"
+        '401':
+          description: Missing Auth Headers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Missing token"
+        '403':
+          description: Invalid Auth Token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Missing token"
+        '402':
+          description: Expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "token expired please log in again"
+        '201':
+          description: No order associated with the provided id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: Failed
+                  error:
+                    type: string
+                    example: "Order does not exists"
+                  message:
+                    type: string
+                    example: "No Orders associated with the provided id"
