@@ -1335,3 +1335,132 @@ paths:
                   message:
                     type: string
                     example: "token expired please log in again"
+
+  /projects/{projectname}/content/newImage:
+    post:
+      summary: Uploads a new image to the CMS
+      tags:
+        - Image Upload And Management 
+      description: This endpoint allows a user to upload images to their account. This is limitted  to only one image upload at a time. Images require an 'alt' text field for accesibility settings
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: projectname
+          required: true
+          schema:
+            type: string
+            minimum: 1
+          description: provide the project name where the image will be used
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: an image of the format ['.png', '.jpg', '.jpeg', '.gif', '.svg', '.apng', '.avif']
+                order:
+                  type: string
+                  description: This is the collection on which to save the uploaded images
+                  example: "User-Stories"
+                title:
+                  type: string
+                  description: Provide The name to call the image the image once uploaded. If left empty, default file name will be used
+                  example: "header-image"
+                type:
+                  type: string
+                  description: Indicate the type of content being uploaded. Currently supported types are "image" for this endpoint. THE STRING "image" IS CASE-SENSITIVE!!
+                alt:
+                  type: string
+                  description: Provide alternative text to use for accesibility settings
+                  example: "a man sitting on a wooden bench" 
+              required:
+                - file
+                - title
+                - data_type
+      responses:
+        '201':
+          description: Image uploaded successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: Success
+                  message:
+                    type: string
+                    example: {
+                      "status": "Success",
+                      "message": "Parcel image added succesfully!",
+                      "details": {
+                         "name": "my-images-02",
+                         "type": "Image",
+                         "src": "localhost:8080/uploads/some/images/myphotos/my-images-02.png",
+                         "alt": "something",
+                         "order": "myphotos",
+                         "project": "some",
+                         "createdon": "2023-10-17T14:33:20.508Z",
+                         "_id": "652e9b302576b7140c8b2275"
+                      }
+                    }
+
+        '400':
+          description:  Invalid format uploaded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  error:
+                    type: string
+                    example: "Files of type: '.mp4' are not supported"
+                  message:
+                    type: string
+                    example: "Please upload images of type .png,.jpg,.jpeg,.gif,.svg,.apng,.avif only"
+        '401':
+          description: Missing Auth Headers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Missing token"
+        '403':
+          description: Invalid Auth Token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Malformed token"
+        '402':
+          description: Expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "token expired please log in again"

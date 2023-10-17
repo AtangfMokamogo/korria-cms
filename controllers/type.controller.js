@@ -32,7 +32,7 @@ class TypeController {
     fs.rename(tempPath, targetPath, (err) => {
       if (err) {
         console.error(err);
-        return res.status(200).send({
+        return res.status(500).send({
           status: 'Failed',
           message: err,
         });
@@ -42,7 +42,7 @@ class TypeController {
     /** Save Image Info To Database */
     const imagetype = new ImageType({
       title: req.body.title,
-      data_type: req.body.data_type,
+      data_type: req.body.type,
       src: `localhost:8080/uploads/${req.project}/images/${req.body.order !== undefined ? req.body.order : `${req.project}-default-images`}/${req.body.title}${path.extname(req.file.originalname)}`,
       alt: req.body.alt,
       order: req.body.order,
@@ -136,9 +136,9 @@ class TypeController {
     if (isValidBody.code === 0) {
       const textField = new TextField({
         title: req.body.title,
-        data_type: req.body.data_type,
+        data_type: req.body.type,
         payload: req.body.payload,
-        tags: req.body.tags || [`admin-${req.body.data_type}`],
+        tags: req.body.tags || [`admin-${req.body.type}`],
         createdby: req.user.email,
         project: req.project,
         order: Object.prototype.hasOwnProperty.call(req.body, 'order') ? req.body.order : 'project-texts',
