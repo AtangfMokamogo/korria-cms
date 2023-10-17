@@ -42,7 +42,7 @@ class TypeController {
     /** Save Image Info To Database */
     const imagetype = new ImageType({
       title: req.body.title,
-      data_type: req.body.type,
+      type: req.body.type,
       src: `localhost:8080/uploads/${req.project}/images/${req.body.order !== undefined ? req.body.order : `${req.project}-default-images`}/${req.body.title}${path.extname(req.file.originalname)}`,
       alt: req.body.alt,
       order: req.body.order,
@@ -55,7 +55,7 @@ class TypeController {
           message: 'Parcel image added succesfully!',
           details: {
             name: `${data.title}`,
-            type: data.data_type,
+            type: data.type,
             src: data.src,
             alt: data.alt,
             order: data.order,
@@ -83,7 +83,10 @@ class TypeController {
       if (files.length === 0) {
         res.send({ status: 'Success', message: 'There no files to show' });
       }
-      res.status(200).send(files);
+      res.status(200).send({
+        status: 'Success',
+        content: files,
+      });
     } catch (error) {
       console.error('Error in getImages controller', error);
       res.status(500);

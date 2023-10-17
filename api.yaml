@@ -1336,7 +1336,7 @@ paths:
                     type: string
                     example: "token expired please log in again"
 
-  /projects/{projectname}/content/newImage:
+  /projects/{projectname}/content/image:
     post:
       summary: Uploads a new image to the CMS
       tags:
@@ -1380,7 +1380,8 @@ paths:
               required:
                 - file
                 - title
-                - data_type
+                - type
+                - alt
       responses:
         '201':
           description: Image uploaded successfully
@@ -1451,6 +1452,121 @@ paths:
                   message:
                     type: string
                     example: "Malformed token"
+        '402':
+          description: Expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "token expired please log in again"
+
+  /projects/{projectname}/content/images:
+    get:
+      summary: retrieves all images uploaded under project
+      tags:
+        - Image Upload And Management 
+      description: This endpoint allows a user to retrieve all images uploaded under the named project
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: projectname
+          required: true
+          schema:
+            type: string
+            minimum: 1
+          description: provide the project name where the order will be created
+      responses:
+        '200':
+          description: A list of Orders associated with the provided tags
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: Success
+                  images:
+                    type: array
+                    items:
+                      type: object
+                    example: [ 
+                                {
+                                  "_id": "652ea62c99f9cea6c33c7b58",
+                                  "title": "my-images-02",
+                                  "data_type": "Image",
+                                  "src": "localhost:8080/uploads/some/images/some-default-images/my-images-02.png",
+                                  "alt": "something",
+                                  "project": "some",
+                                  "createdon": "2023-10-17T15:20:12.889Z",
+                                  "__v": 0
+                                }
+                    ]
+        '201':
+          description: No order associated with the provided tags
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: Failed
+                  error:
+                    type: string
+                    example: "Order does not exists"
+                  message:
+                    type: string
+                    example: "No Orders associated with the provided tags"
+        '400':
+          description:  Project does not exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  error:
+                    type: string
+                    example: "Project does not exists"
+                  message:
+                    type: string
+                    example: "cannot create order Blog Post in an unavailable project"
+        '401':
+          description: Missing Auth Headers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Missing token"
+        '403':
+          description: Invalid Auth Token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Missing token"
         '402':
           description: Expired token
           content:

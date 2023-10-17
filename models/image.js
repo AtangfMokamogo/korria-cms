@@ -7,7 +7,7 @@ const imageTypeSchema = new Schema({
     type: String,
     require: [true, 'Image title not defined'],
   },
-  data_type: {
+  type: {
     type: String,
     required: [true, 'Data type not defined'],
   },

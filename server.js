@@ -32,7 +32,7 @@ app.use('/api/v1/users', authRoutes);
 app.use('/api/v1/users/projects', projectRoutes);
 app.use('/api/v1/users/projects', orderRoutes);
 app.use('/api/v1/users/projects', parcelRoutes);
-app.use('/api/v1/users/projects/', typeRoutes);
+app.use('/api/v1/users/projects', typeRoutes);
 
 // setup server to listen on port 8080
 app.listen(process.env.PORT || 8080, () => {
