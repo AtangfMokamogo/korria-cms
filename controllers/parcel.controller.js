@@ -1,4 +1,5 @@
 const Parcel = require('../models/parcel');
+const Project = require('../models/project');
 const { validateReqSchema, validateParcelTypeSchema } = require('../utils/schema.utils');
 
 const validReqBodyKeys = ['type', 'schema'];
@@ -16,6 +17,21 @@ class ParcelController {
     const isValidParcelSchema = await validateParcelTypeSchema(req);
     console.log(isValidBody, isValidParcelSchema);
 
+    if (isValidBody.code === -1) {
+      res.status(400).send({
+        status: 'Failed',
+        message: 'Missing Fields in Request',
+        missing: [[(isValidBody.length !== 0) ? isValidBody.message : ['']], [(isValidParcelSchema.length !== 0) ? isValidParcelSchema.message : ['']]],
+      });
+    }
+    if (isValidParcelSchema.code === -1) {
+      res.status(400).send({
+        status: 'Failed',
+        error: 'Invalid schema body',
+        message: 'Check fields property in schema. At least one content data has to be present',
+      });
+    }
+
     if (isValidBody.code === 0 && isValidParcelSchema.code === 0) {
       /** Proceed with the request */
       const parcel = new Parcel({
@@ -28,14 +44,14 @@ class ParcelController {
       parcel.save(parcel).then(
         (data) => {
           res.status(201).send({
+            id: data._id,
+            status: 'Success',
             message: 'Parcel Type added succesfully!',
-            details: {
-              name: `${data.name}`,
-              project: data.project,
-              createdby: data.createdby,
-              date: data.createdon,
-              id: data._id,
-            },
+            name: `${data.name}`,
+            project: data.project,
+            tags: data.tags,
+            createdby: data.createdby,
+            date: data.createdon,
           });
         },
       ).catch(
@@ -44,12 +60,6 @@ class ParcelController {
           console.error('Error in newType function', error);
         },
       );
-    } else {
-      res.status(400).send({
-        status: 'Failed',
-        message: 'Missing Fields in Request',
-        missing: [[(isValidBody.lenth !== 0) ? isValidBody.message : ['']], [(isValidParcelSchema.length !== 0) ? isValidParcelSchema.message : ['']]],
-      });
     }
   }
 
@@ -63,7 +73,10 @@ class ParcelController {
       if (parcels.length === 0) {
         res.send({ status: 'Success', message: 'There no parcels to show' });
       }
-      res.status(200).send(parcels);
+      res.status(200).send({
+        status: 'Success',
+        parcels,
+      });
     } catch (error) {
       console.error('Error in getParcels controller', error);
       res.status(500);
@@ -75,11 +88,18 @@ class ParcelController {
    */
   static async deleteParcel(req, res) {
     try {
-      const deleted = await Parcel.deleteOne({ _id: req.id });
+      const deleted = await Parcel.deleteOne({ project: req.project, _id: req.id });
       if (deleted.deletedCount !== 0) {
-        res.status(200).send({ status: 'Success', message: `Deleted: ${deleted.deletedCount} parcel types` });
+        res.status(200).send({
+          status: 'Success',
+          message: `Deleted: ${deleted.deletedCount} parcel of ID: ${req.id} from project: ${req.project}`,
+        });
       }
-      res.send({ status: 'Success', message: `No parcel types of ID: ${req.id}. Deleted ${deleted.deletedCount} parcels` });
+      res.status(400).send({
+        status: 'Failed',
+        error: `Parcel of id: ${req.id} or Project: ${req.project} not available, check the list of available projects`,
+        message: `No parcel types of ID: ${req.id} in project: ${req.project}. Deleted ${deleted.deletedCount} parcels`,
+      });
     } catch (error) {
       console.error('Error in deleteParcels controller', error);
       res.status(500);
@@ -93,12 +113,30 @@ class ParcelController {
     /** find the type by passed id */
     /** add the new fields into the type defination schema>>fields array */
     try {
+      const project = await Project.find({ project: req.project });
+      if (!project) {
+        res.status(400).send({
+          status: 'Failed',
+          error: `Could not find project: ${req.project}`,
+          message: 'Check the name of the project passed in the path',
+        });
+      }
+      if (req.body.length === 0) {
+        res.status(400).send({
+          status: 'Failed',
+          error: 'Array of fields provided is empty',
+          message: `Could not update parcel: ${req.id} with empty array provided`,
+        });
+      }
       const parcel = await Parcel.findByIdAndUpdate(
         req.id,
         { $push: { 'schema.fields': { $each: req.body } } },
         { new: true }, // To return the updated document
       );
-      res.send(parcel);
+      res.send({
+        status: 'Success',
+        parcel,
+      });
     } catch (error) {
       console.error('Error in addTypeField', error);
     }

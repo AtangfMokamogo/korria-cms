@@ -18,7 +18,7 @@ async function validateReqSchema(req, validKeys) {
       };
     }
     return {
-      code: 1,
+      code: -1,
       message: [...missingKeys],
     };
   } catch (error) {
@@ -29,6 +29,12 @@ async function validateReqSchema(req, validKeys) {
 async function validateParcelTypeSchema(req) {
   try {
     const { fields } = req.body.schema;
+    if (!fields || fields.length === 0) {
+      return {
+        code: -1,
+        message: 'Invalid, content type data missing in the schema',
+      };
+    }
     console.log(fields);
     for (const field of fields) {
       if (!Object.prototype.hasOwnProperty.call(field, 'name') && !Object.prototype.hasOwnProperty.call(field, 'data_type')) {

@@ -31,10 +31,13 @@ paths:
               properties:
                 fullname:
                   type: string
+                  example: "ALX TESTER"
                 email:
                   type: string
+                  example: "tester@alx.mail"
                 password:
                   type: string
+                  example: "some-secret-string"
               required:
                 - fullname
                 - email
@@ -861,3 +864,519 @@ paths:
                   message:
                     type: string
                     example: "No Orders associated with the provided id"
+
+  /projects/{projectname}/parcel/types/new:
+    post:
+      summary: Adds a new content type defination to project
+      tags:
+        - Content Type Definition
+      description: This endpoint allows a user to define a new content type shchema
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: projectname
+          required: true
+          schema:
+            type: string
+            minimum: 1
+          description: provide the project name where the order was created
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                schema:
+                  type: object
+                  properties: 
+                    fields:
+                      type: array
+                      items:
+                        type: object
+                tags:
+                  type: array
+                  items:
+                    type: string
+              required:
+                - tags
+      responses:
+        '201':
+          description: Parcel Defined successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Success"
+                  message:
+                    type: string
+                    example: "Parcel defined Successfully"
+                  name:
+                    type: string
+                    example: "Name of the added type"
+                  id:
+                    type: string
+                    example: "652e308d3eecc071379ebe09"
+                  project:
+                    type: string
+                    example: "ALX test website"
+                  tags:
+                    type: array
+                    items: 
+                      type: string
+                    example: [ "fino", "blog"]
+                  createdby:
+                    type: string
+                  date:
+                    type: string
+        '400':
+          description:  Invalid request body
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  error:
+                    type: string
+                    example: "Invalid Schema Body"
+                  message:
+                    type: string
+                    example: "Check fields property in schema. At least one content data has to be present"
+        '401':
+          description: Missing Auth Headers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Missing token"
+        '403':
+          description: Invalid Auth Token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Missing token"
+        '402':
+          description: Expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "token expired please log in again"
+
+  /projects/{projectname}/parcel/types:
+    get:
+      summary: retrieves all parcels defined in the project
+      tags:
+        - Content Type Definition
+      description: This endpoint allows a user to view all parcels defined for project
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: projectname
+          required: true
+          schema:
+            type: string
+            minimum: 1
+          description: provide the project name where the parcel/s was created
+      responses:
+        '200':
+          description: an array of parcels defined in the project
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Success"
+                  parcels:
+                    type: array
+                    items:
+                      type: object
+                      example: [
+                          {
+                            "_id": "6526f77ec96fa492b8231fb8",
+                            "name": "Blog Post",
+                            "project": "appa",
+                            "schema": {
+                                "fields": [
+                                  {
+                                    "name": "another one",
+                                    "data_type": "text"
+                                  },
+                                  {
+                                    "name": "Blog Image",
+                                    "data_type": "image",
+                                    "src": " ",
+                                    "alt": " "
+                                  }
+                                ],
+                            "_id": "6526f77ec96fa492b8231fb9"
+                          },
+                          "tags": [
+                            "fino",
+                            "Blog"
+                          ],
+                          "createdby": "lawdd@mail3",
+                          "createdon": "2023-10-11T19:29:02.387Z",
+                          "__v": 0
+                        }
+                      ]
+
+        '400':
+          description:  Invalid request body
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  error:
+                    type: string
+                    example: "Invalid Schema Body"
+                  message:
+                    type: string
+                    example: "Check fields property in schema. At least one content data has to be present"
+        '401':
+          description: Missing Auth Headers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Missing token"
+        '403':
+          description: Invalid Auth Token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Missing token"
+        '402':
+          description: Expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "token expired please log in again"
+
+  /projects/{projectname}/parcel/types/delete:
+    get:
+      summary: Deletes a parcel type from project
+      tags:
+        - Content Type Definition
+      description: This endpoint allows a user to delete parcels under their account by id
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: id
+          schema:
+            type: string
+          description: provide the id associated with the parcel/s
+        - in: path
+          name: projectname
+          required: true
+          schema:
+            type: string
+            minimum: 1
+          description: provide the project name where the parcel was created
+      responses:
+        '200':
+          description: State of deletion
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: Success
+                  message:
+                    type: string
+                    example: "Deleted: 1 parcel of ID: 6526f77ec96fa492b8231fb8 from project: ALX website"
+
+        '400':
+          description:  Query string empty or invalid/ parcel unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  error:
+                    type: string
+                    example: "Query string has no ID parameter "
+                  message:
+                    type: string
+                    example: "Check if you provided the correct ID or if query string has ID property"
+        '401':
+          description: Missing Auth Headers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Missing token"
+        '403':
+          description: Invalid Auth Token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Missing token"
+        '402':
+          description: Expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "token expired please log in again"
+
+  /projects/{projectname}/parcel/types/add_field:
+    post:
+      summary: define content data fields for a parcel or update a parcel with new content data fields
+      tags:
+        - Content Type Definition
+      description: This endpoint allows a user to add new content data to parcels. or updates fields when present with new data
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: id
+          schema:
+            type: string
+          description: provide the id associated with the parcel/s
+        - in: path
+          name: projectname
+          required: true
+          schema:
+            type: string
+            minimum: 1
+          description: provide the project name where the parcel was created
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type:
+                  type: object
+                minItems: 1
+                example:
+                  {
+                    name: blog post,
+                    data_type: text,
+                    payload: alx specialisation portfolio project almost done
+                  }
+                tags:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: The updated document
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: Success
+                  updated-parcel:
+                    type: object
+                    example: {
+        "_id": "6526fd00e88c9b0431731cc1",
+        "name": "Blog Post",
+        "project": "appa",
+        "schema": {
+            "fields": [
+                {
+                    "name": "some otherone",
+                    "data_type": "text"
+                },
+                {
+                    "name": "Blog Image",
+                    "data_type": "image",
+                    "src": " ",
+                    "alt": " "
+                },
+                [
+                    {
+                        "name": "heading2",
+                        "data_type": "text"
+                    },
+                    {
+                        "name": "Blog Image",
+                        "data_type": "image",
+                        "src": " ",
+                        "alt": " "
+                    }
+                ],
+                [
+                    {
+                        "name": "heading2",
+                        "data_type": "text"
+                    },
+                    {
+                        "name": "Blog Image",
+                        "data_type": "image",
+                        "src": " ",
+                        "alt": " "
+                    }
+                ],
+                {
+                    "name": "heading2",
+                    "data_type": "text"
+                },
+                {
+                    "name": "Blog Image",
+                    "data_type": "image",
+                    "src": " ",
+                    "alt": " "
+                },
+                {
+                    "name": "heading2",
+                    "data_type": "text"
+                },
+                {
+                    "name": "Blog Image",
+                    "data_type": "image",
+                    "src": " ",
+                    "alt": " "
+                }
+            ],
+            "_id": "6526fd00e88c9b0431731cc2"
+        },
+        "tags": [
+            "fino",
+            "Blog"
+        ],
+        "createdby": "lawdd@mail3",
+        "createdon": "2023-10-11T19:52:32.974Z",
+        "__v": 0
+    }
+        '400':
+          description:  project not available
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  error:
+                    type: string
+                    example: "Could not find project: ALX website"
+                  message:
+                    type: string
+                    example: "Check the name of the project provided in the url path"
+        '401':
+          description: Missing Auth Headers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Missing token"
+        '403':
+          description: Invalid Auth Token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Missing token"
+        '402':
+          description: Expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "token expired please log in again"

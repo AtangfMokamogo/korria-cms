@@ -31,7 +31,7 @@ app.use(express.urlencoded({
 app.use('/api/v1/users', authRoutes);
 app.use('/api/v1/users/projects', projectRoutes);
 app.use('/api/v1/users/projects', orderRoutes);
-app.use('/api/v1/users/projects/:projectname', parcelRoutes);
+app.use('/api/v1/users/projects', parcelRoutes);
 app.use(typeRoutes);
 
 // setup server to listen on port 8080
