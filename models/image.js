@@ -33,34 +33,4 @@ const imageTypeSchema = new Schema({
 
 });
 
-const textTypeSchema = new Schema({
-  title: {
-    type: String,
-    require: [true, 'Image title not defined'],
-  },
-  data_type: {
-    type: String,
-    required: [true, 'Data type not defined'],
-  },
-  payload: {
-    type: String,
-    required: [true, 'Text payload not defined'],
-  },
-  tags: {
-    type: [String],
-  },
-  project: {
-    type: String,
-  },
-  order: {
-    type: String,
-  },
-  createdon: {
-    type: Date,
-    default: Date.now,
-  },
-
-});
-
-module.exports = mongoose.model('ImageField', imageTypeSchema);
-module.exports = mongoose.model('TextType', textTypeSchema);
+module.exports = mongoose.model('ImageType', imageTypeSchema);

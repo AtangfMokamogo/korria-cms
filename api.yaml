@@ -1255,76 +1255,31 @@ paths:
                   updated-parcel:
                     type: object
                     example: {
-        "_id": "6526fd00e88c9b0431731cc1",
-        "name": "Blog Post",
-        "project": "appa",
-        "schema": {
-            "fields": [
-                {
-                    "name": "some otherone",
-                    "data_type": "text"
-                },
-                {
-                    "name": "Blog Image",
-                    "data_type": "image",
-                    "src": " ",
-                    "alt": " "
-                },
-                [
-                    {
-                        "name": "heading2",
-                        "data_type": "text"
-                    },
-                    {
-                        "name": "Blog Image",
-                        "data_type": "image",
-                        "src": " ",
-                        "alt": " "
+                      "_id": "6526fd00e88c9b0431731cc1",
+                      "name": "Blog Post",
+                      "project": "appa",
+                      "schema": {
+                          "fields": [
+                            {
+                              "name": "some otherone",
+                              "data_type": "text"
+                            },
+                            {
+                              "name": "Blog Image",
+                              "data_type": "image",
+                              "src": " ",
+                              "alt": " "
+                            },
+                          ],
+                      },
+                      "tags": [
+                        "fino",
+                        "Blog"
+                      ],
+                      "createdby": "lawdd@mail3",
+                      "createdon": "2023-10-11T19:52:32.974Z",
+                      "__v": 0
                     }
-                ],
-                [
-                    {
-                        "name": "heading2",
-                        "data_type": "text"
-                    },
-                    {
-                        "name": "Blog Image",
-                        "data_type": "image",
-                        "src": " ",
-                        "alt": " "
-                    }
-                ],
-                {
-                    "name": "heading2",
-                    "data_type": "text"
-                },
-                {
-                    "name": "Blog Image",
-                    "data_type": "image",
-                    "src": " ",
-                    "alt": " "
-                },
-                {
-                    "name": "heading2",
-                    "data_type": "text"
-                },
-                {
-                    "name": "Blog Image",
-                    "data_type": "image",
-                    "src": " ",
-                    "alt": " "
-                }
-            ],
-            "_id": "6526fd00e88c9b0431731cc2"
-        },
-        "tags": [
-            "fino",
-            "Blog"
-        ],
-        "createdby": "lawdd@mail3",
-        "createdon": "2023-10-11T19:52:32.974Z",
-        "__v": 0
-    }
         '400':
           description:  project not available
           content:

@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
-const ImageField = require('../models/types');
-const TextField = require('../models/types');
+const ImageType = require('../models/image');
+const TextField = require('../models/text');
 const jsonifyTextType = require('../utils/json.utils');
 const { validateReqSchema } = require('../utils/schema.utils');
 
@@ -10,7 +10,18 @@ class TypeController {
    * This function adds a new image content field to a type
    */
   static async addImage(req, res) {
-    const basePath = path.join(__dirname, '..', 'uploads', `${req.project}`, 'images', Object.prototype.hasOwnProperty.call(req.body, 'order') ? req.body.order : 'project-images');
+    /** Verify Supported Image File Types */
+    const imageTypes = ['.png', '.jpg', '.jpeg', '.gif', '.svg', '.apng', '.avif'];
+    if (!imageTypes.includes(path.extname(req.file.originalname))) {
+      res.status(400).send({
+        status: 'Failed',
+        error: `Files of type: '${path.extname(req.file.originalname)}' are not supported.`,
+        message: `Please upload images of type ${imageTypes} only`,
+      });
+    }
+
+    /** Upload Directory Setup */
+    const basePath = path.join(__dirname, '..', 'uploads', `${req.project}`, 'images', Object.prototype.hasOwnProperty.call(req.body, 'order') ? req.body.order : `${req.project}-default-images`);
     fs.mkdirSync(basePath, { recursive: true });
     const tempPath = req.file.path;
     const newFileName = `${req.body.title}${path.extname(req.file.originalname)}`;
@@ -27,10 +38,12 @@ class TypeController {
         });
       }
     });
-    const imagetype = new ImageField({
+
+    /** Save Image Info To Database */
+    const imagetype = new ImageType({
       title: req.body.title,
       data_type: req.body.data_type,
-      src: `localhost:8080/uploads/${req.project}/images/${req.body.order}/${req.body.title}${path.extname(req.file.originalname)}`,
+      src: `localhost:8080/uploads/${req.project}/images/${req.body.order !== undefined ? req.body.order : `${req.project}-default-images`}/${req.body.title}${path.extname(req.file.originalname)}`,
       alt: req.body.alt,
       order: req.body.order,
       project: req.project,
@@ -38,6 +51,7 @@ class TypeController {
     imagetype.save(imagetype).then(
       (data) => {
         res.status(201).send({
+          status: 'Success',
           message: 'Parcel image added succesfully!',
           details: {
             name: `${data.title}`,
@@ -65,7 +79,7 @@ class TypeController {
    */
   static async getImages(req, res) {
     try {
-      const files = await ImageField.find({ project: req.project });
+      const files = await ImageType.find({ project: req.project });
       if (files.length === 0) {
         res.send({ status: 'Success', message: 'There no files to show' });
       }
@@ -82,7 +96,7 @@ class TypeController {
   static async removeImage(req, res) {
     try {
       console.log(req.body.title);
-      const deleted = await ImageField.deleteOne({ title: req.body.title });
+      const deleted = await ImageType.deleteOne({ title: req.body.title });
       if (deleted.deletedCount !== 0) {
         res.status(200).send({ status: 'Success', message: `Deleted: ${deleted.deletedCount} textField types` });
       }
