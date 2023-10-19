@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Korria Headless CMS API
-  description: This documnetations has an api description
+  description: Korria is a minimal implementation of a headless content management system. This API documentation defines the Minimum Viable Product of the CMS
   version: 0.0.1
 
 servers:
