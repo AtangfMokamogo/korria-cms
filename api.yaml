@@ -1336,7 +1336,7 @@ paths:
                     type: string
                     example: "token expired please log in again"
 
-  /projects/{projectname}/content/image:
+  /projects/{projectname}/content/image/new:
     post:
       summary: Uploads a new image to the CMS
       tags:
@@ -1466,7 +1466,7 @@ paths:
                     type: string
                     example: "token expired please log in again"
 
-  /projects/{projectname}/content/images:
+  /projects/{projectname}/content/image/all:
     get:
       summary: retrieves all images uploaded under project
       tags:
@@ -1567,6 +1567,119 @@ paths:
                   message:
                     type: string
                     example: "Missing token"
+        '402':
+          description: Expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "token expired please log in again"
+
+  /projects/{projectname}/content/image/delete:
+    post:
+      summary: Uploads a new image to the CMS
+      tags:
+        - Image Upload And Management 
+      description: This endpoint allows a client ot delete an uploaded image
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: projectname
+          required: true
+          schema:
+            type: string
+            minimum: 1
+          description: provide the project name where the image was uploaded
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: Provide the title of the image to remove
+                  example: "header-image"
+              required:
+                - title
+
+      responses:
+        '201':
+          description: Image uploaded successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: Success
+                  message:
+                    type: string
+                    example: {
+                      "status": "Success",
+                      "message": "Parcel image added succesfully!",
+                      "details": {
+                         "name": "my-images-02",
+                         "type": "Image",
+                         "src": "localhost:8080/uploads/content/ALX-BLOG/images/my-images-02.png",
+                         "alt": "something",
+                         "order": "myphotos",
+                         "project": "some",
+                         "createdon": "2023-10-17T14:33:20.508Z",
+                         "_id": "652e9b302576b7140c8b2275"
+                      }
+                    }
+
+        '400':
+          description:  Image not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  error:
+                    type: string
+                    example: "Image not found in project"
+                  message:
+                    type: string
+                    example: "Check images, perhaps it has been deleted"
+        '401':
+          description: Missing Auth Headers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Missing token"
+        '403':
+          description: Invalid Auth Token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Malformed token"
         '402':
           description: Expired token
           content:

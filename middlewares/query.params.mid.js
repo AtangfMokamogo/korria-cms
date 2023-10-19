@@ -5,12 +5,15 @@
  */
 async function getParams(req, res, next) {
   /** extract the projectname parameter from route */
-  const { projectname } = req.params;
+  const { projectname, imagename } = req.params;
 
   if (!projectname) {
     res.status(400).send({ message: 'Project name not supplied. Check URL' });
   } else {
     req.project = projectname;
+  }
+  if (imagename !== null || imagename !== undefined) {
+    req.imagename = imagename;
   }
   next();
 }

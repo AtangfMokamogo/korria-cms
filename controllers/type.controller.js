@@ -21,7 +21,7 @@ class TypeController {
     }
 
     /** Upload Directory Setup */
-    const basePath = path.join(__dirname, '..', 'uploads', `${req.project}`, 'images', Object.prototype.hasOwnProperty.call(req.body, 'order') ? req.body.order : `${req.project}-default-images`);
+    const basePath = path.join(__dirname, '..', 'uploads', 'content', `${req.project}`, 'images');
     fs.mkdirSync(basePath, { recursive: true });
     const tempPath = req.file.path;
     const newFileName = `${req.body.title}${path.extname(req.file.originalname)}`;
@@ -41,9 +41,9 @@ class TypeController {
 
     /** Save Image Info To Database */
     const imagetype = new ImageType({
-      title: req.body.title,
+      title: `${req.body.title}${path.extname(req.file.originalname)}`,
       type: req.body.type,
-      src: `localhost:8080/uploads/${req.project}/images/${req.body.order !== undefined ? req.body.order : `${req.project}-default-images`}/${req.body.title}${path.extname(req.file.originalname)}`,
+      src: `localhost:8080/uploads/content/${req.project}/images/${req.body.title}${path.extname(req.file.originalname)}`,
       alt: req.body.alt,
       order: req.body.order,
       project: req.project,
@@ -98,26 +98,57 @@ class TypeController {
    */
   static async removeImage(req, res) {
     try {
-      console.log(req.body.title);
-      const deleted = await ImageType.deleteOne({ title: req.body.title });
-      if (deleted.deletedCount !== 0) {
-        res.status(200).send({ status: 'Success', message: `Deleted: ${deleted.deletedCount} textField types` });
+      const image = ImageType.find({ title: req.body.title, project: req.project });
+
+      /** check for the image existence in provided project */
+      if (image) {
+        const deleted = await ImageType.deleteOne(
+          { title: req.body.title },
+          { project: req.project },
+        );
+        if (deleted.deletedCount !== 0) {
+          res.status(200).send({ status: 'Success', message: `Deleted: ${deleted.deletedCount} images` });
+        }
+        /** Remove Image from System */
+
+        const basePath = path.join(__dirname, '..', 'uploads', 'content', `${req.project}`, 'images');
+        const imageToDelete = `${req.body.title}`;
+        const filePath = path.join(basePath, imageToDelete);
+
+        if (fs.existsSync(filePath)) {
+          console.log(filePath);
+          fs.unlinkSync(filePath);
+        }
       }
-      res.send({ status: 'Success', message: `No textField types of ID: ${req.id}. Deleted ${deleted.deletedCount} files` });
 
-      /** Remove Image from System */
-
-      const basePath = path.join(__dirname, '..', 'uploads', `${req.project}`, 'images', Object.prototype.hasOwnProperty.call(req.body, 'order') ? req.body.order : 'project-images');
-      const imageToDelete = `${req.body.title}`;
-      const filePath = path.join(basePath, imageToDelete);
-
-      if (fs.existsSync(filePath)) {
-        console.log(filePath);
-        fs.unlinkSync(filePath);
-      }
+      /** No image prooceed with error in response */
+      res.status(400).send({
+        status: 'Failed',
+        error: 'Image not found in project',
+        message: 'Check images, Perhaps its been deleted',
+      });
     } catch (error) {
       console.error('Error in removeImage controller', error);
       res.status(500);
+    }
+  }
+
+  /** IMAGE CONTENT SERVER CONTROLLERS */
+
+  /**
+   * This function process a request to serve images
+   */
+  static async serveImageFile(req, res) {
+    try {
+      const basePath = path.join(__dirname, '..', 'uploads', 'content', `${req.project}`, 'images');
+      const imageToDelete = `${req.imagename}`;
+      const filePath = path.join(basePath, imageToDelete);
+
+      if (fs.existsSync(filePath)) {
+        res.status(200).sendFile(filePath);
+      }
+    } catch (error) {
+      console.error('Error in serveImageFile controller', error);
     }
   }
 
@@ -139,7 +170,7 @@ class TypeController {
     if (isValidBody.code === 0) {
       const textField = new TextField({
         title: req.body.title,
-        data_type: req.body.type,
+        type: req.body.type,
         payload: req.body.payload,
         tags: req.body.tags || [`admin-${req.body.type}`],
         createdby: req.user.email,

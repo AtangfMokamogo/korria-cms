@@ -20,12 +20,15 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
-/** Image Field Defining routes */
-router.post('/:projectname/content/newimage', verifyToken, getParams, upload.single('file'), TypeController.addImage);
-router.get('/:projectname/content/deleteimage', verifyToken, getParams, TypeController.removeImage);
-router.get('/:projectname/content/images', verifyToken, getParams, TypeController.getImages);
+/** Image Field Defining Routes */
+router.post('/:projectname/content/image/new', verifyToken, getParams, upload.single('file'), TypeController.addImage);
+router.post('/:projectname/content/image/delete', verifyToken, getParams, TypeController.removeImage);
+router.get('/:projectname/content/image/all', verifyToken, getParams, TypeController.getImages);
 
-/** Text Field Defining routes */
+/** Text Field Defining Routes */
 router.post('/:projectname/content/newText', verifyToken, getParams, TypeController.addText);
+
+/** Image Content Routes */
+router.get('/:projectname/images/:imagename', TypeController.serveImageFile);
 
 module.exports = router;

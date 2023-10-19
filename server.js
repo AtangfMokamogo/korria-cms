@@ -14,10 +14,16 @@ const swaggerJsdoc = YAML.load(fs.readFileSync('./api.yaml', 'utf8'));
 
 dbConnect();
 const app = express();
+// serve static files
+app.use(express.static(__dirname));
+app.use('*.css', (req, res, next) => {
+  res.set('Content-Type', 'text/css');
+  next();
+});
 app.use(
   '/korria-docs',
   swaggerUi.serve,
-  swaggerUi.setup(swaggerJsdoc, { explorer: true }),
+  swaggerUi.setup(swaggerJsdoc, { customCssUrl: 'https://cdn.jsdelivr.net/npm/swagger-ui-themes@3.0.0/themes/3.x/theme-material.css' }),
 );
 
 // parse requests of content-type - application/json
