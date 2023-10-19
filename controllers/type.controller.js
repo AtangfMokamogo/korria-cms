@@ -107,7 +107,10 @@ class TypeController {
           { project: req.project },
         );
         if (deleted.deletedCount !== 0) {
-          res.status(200).send({ status: 'Success', message: `Deleted: ${deleted.deletedCount} images` });
+          res.status(200).send({
+            status: 'Success',
+            message: `Deleted: ${deleted.deletedCount} images`,
+          });
         }
         /** Remove Image from System */
 
@@ -158,7 +161,7 @@ class TypeController {
    * This function adds a new text field to database and
    */
   static async addText(req, res) {
-    const validTextSchema = ['title', 'data_type', 'payload'];
+    const validTextSchema = ['fieldtype', 'content'];
     const isValidBody = await validateReqSchema(req, validTextSchema);
     const basePath = path.join(__dirname, '..', 'uploads', 'content', `${req.project}`, 'texts');
 
@@ -169,30 +172,33 @@ class TypeController {
 
     if (isValidBody.code === 0) {
       const textField = new TextType({
-        title: req.body.title,
-        type: req.body.type,
-        payload: req.body.payload,
-        tags: req.body.tags || [`admin-${req.body.type}`],
-        createdby: req.user.email,
-        project: req.project,
-        order: Object.prototype.hasOwnProperty.call(req.body, 'order') ? req.body.order : `${req.project}`,
+        fieldtype: req.body.fieldtype,
+        content: {
+          title: req.body.content.title,
+          payload: req.body.content.payload,
+          tags: req.body.content.tags || [`admin-${req.body.type}`],
+          createdby: req.user.email,
+          project: req.project,
+          order: Object.prototype.hasOwnProperty.call(req.body.content, 'order') ? req.body.content.order : `${req.project}`,
+        },
       });
       textField.save(textField).then(
         (data) => {
           res.status(201).send({
             message: 'text added succesfully!',
             details: {
-              id: data._id,
-              title: `${data.title}`,
-              data_type: data.data_type,
-              payload: data.payload,
-              tags: data.tags,
-              createdby: data.createdby,
-              createdon: data.createdon,
-              project: data.project,
-              order: data.order,
-              JSONIFIED: req.JSONIFIED,
-              json_key: data.order,
+              fieldtype: data.fieldtype,
+              content: {
+                title: data.content.title,
+                payload: data.content.payload,
+                tags: data.content.tags,
+                createdby: data.content.createdby,
+                project: data.content.project,
+                order: data.content.order,
+                createdon: data.content.createdon,
+                id: data._id,
+
+              },
             },
           });
         },
@@ -229,11 +235,14 @@ class TypeController {
    */
   static async deleteText(req, res) {
     try {
-      const deleted = await TextType.deleteOne({ project: req.project, _id: req.id });
+      const deleted = await TextType.deleteOne(
+        { _id: req.id },
+        { project: req.projectc },
+      );
       if (deleted.deletedCount !== 0) {
         res.status(200).send({
           status: 'Success',
-          message: `Deleted: ${deleted.deletedCount} parcel of ID: ${req.id} from project: ${req.project}`,
+          message: `Deleted: ${deleted.deletedCount} text of ID: ${req.id} from project: ${req.project}`,
         });
       }
       res.status(400).send({

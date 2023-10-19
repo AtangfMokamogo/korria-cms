@@ -1703,3 +1703,330 @@ paths:
                   message:
                     type: string
                     example: "token expired please log in again"
+  
+  /projects/{projectname}/content/text/new:
+    post:
+      summary: Uploads new text data to the CMS
+      tags:
+        - Text Data Upload And Management 
+      description: This endpoint allows a user to upload text data to their account. The request to this endpoint require a verifiable schema. (See Example request body). The
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: projectname
+          required: true
+          schema:
+            type: string
+            minimum: 1
+          description: provide the project name where the image will be used
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fieldtype:
+                  type: string
+                  example: text
+                content:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                      example: Blog Heading
+                    payload:
+                      type: string
+                      example: Korria Blog finally launches
+                    tags:
+                      type: array
+                      fields:
+                          type: string
+                      example: ["Korria Blog"]
+                    order:
+                      type: string
+                      example: Blog Posts
+
+              required:
+                - fieldtype
+                - content
+      responses:
+        '201':
+          description: text uploaded successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: Success
+                  message:
+                    type: string
+                    example: {
+                      "status": "Success",
+                      "message": "text added succesfully!",
+                      "details": {
+                        "fieldtype": "Image",
+                        "content": {
+                          "title": "Blog Heading",
+                          "payload": "Korria CMS launches finally",
+                          "tags": ["Korria blog"],
+                          "project": "Korria Blog",
+                          "order": "Blog Posts",
+                          "createdon": "2023-10-17T14:33:20.508Z",
+                          "_id": "652e9b302576b7140c8b2275"
+                        }
+                      }
+                    }
+
+        '400':
+          description:  Invalid format uploaded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  error:
+                    type: string
+                    example: "Files of type: '.mp4' are not supported"
+                  message:
+                    type: string
+                    example: "Please upload images of type .png,.jpg,.jpeg,.gif,.svg,.apng,.avif only"
+        '401':
+          description: Missing Auth Headers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Missing token"
+        '403':
+          description: Invalid Auth Token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Malformed token"
+        '402':
+          description: Expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "token expired please log in again"
+  
+  /projects/{projectname}/content/text/all:
+    get:
+      summary: retrieves all images uploaded under project
+      tags:
+        - Text Data Upload And Management 
+      description: This endpoint allows a user to retrieve all text data created under the named project
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: projectname
+          required: true
+          schema:
+            type: string
+            minimum: 1
+          description: provide the project name where the texts were created
+      responses:
+        '200':
+          description: A list of texts associated with the provided project
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: Success
+                  texts:
+                    type: array
+                    items:
+                      type: object
+                    example: [ 
+                                {
+                                  "fieldtype": "text",
+                                  "content": {
+                                    "title": "Blog Heading",
+                                    "payload": "Korria Blog finally launches",
+                                    "tags": [
+                                      "Korria Blog"
+                                    ],
+                                    "order": "Blog Posts"
+                                  }
+                                }
+                    ]
+        '400':
+          description:  Project does not exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  error:
+                    type: string
+                    example: "Project not found"
+                  message:
+                    type: string
+                    example: "The requested resource cannot be found in project ppa. Spelling issues? Or create a new one with name ppa"
+        '401':
+          description: Missing Auth Headers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Missing token"
+        '403':
+          description: Invalid Auth Token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Missing token"
+        '402':
+          description: Expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "token expired please log in again"
+  
+  /projects/{projectname}/content/text/delete:
+    get:
+      summary: Deletes text data from the project 
+      tags:
+        - Text Data Upload And Management 
+      description: This endpoint allows a client to delete text data from a project
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: string
+          description: provide the id of the text to delete
+        - in: path
+          name: projectname
+          required: true
+          schema:
+            type: string
+            minimum: 1
+          description: provide the project name where the text was created
+
+      responses:
+        '200':
+          description: Text removed succefully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: Success
+                  message:
+                    type: string
+                    example: "Deleted: 1 text of ID: 65317ba58173e141e3c39169 from project: Korria Blogs"
+
+        '400':
+          description:  text not found/ bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  error:
+                    type: string
+                    example: "Image not found in project"
+                  message:
+                    type: string
+                    example: "Check text, perhaps it has been deleted"
+        '401':
+          description: Missing Auth Headers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Missing token"
+        '403':
+          description: Invalid Auth Token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "Malformed token"
+        '402':
+          description: Expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Failed"
+                  message:
+                    type: string
+                    example: "token expired please log in again"

@@ -28,7 +28,7 @@ router.get('/:projectname/content/image/all', verifyToken, getParams, TypeContro
 /** Text Field Defining Routes */
 router.post('/:projectname/content/text/new', verifyToken, getParams, TypeController.addText);
 router.get('/:projectname/content/text/all', verifyToken, getParams, TypeController.getText);
-router.get('/:projectname/content/text/delete', verifyToken, getParams, getQueryId);
+router.get('/:projectname/content/text/delete', verifyToken, getParams, getQueryId, TypeController.deleteText);
 
 /** Image Content Routes */
 router.get('/:projectname/images/:imagename', TypeController.serveImageFile);

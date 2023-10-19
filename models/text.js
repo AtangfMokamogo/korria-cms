@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-const textTypeSchema = new Schema({
+const fieldContentSchema = new Schema({
   title: {
     type: String,
     require: [true, 'Text title not defined'],
@@ -24,6 +24,16 @@ const textTypeSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+});
 
+const textTypeSchema = new Schema({
+  fieldtype: {
+    type: String,
+    required: [true, 'Field type not defined'],
+  },
+  content: {
+    type: fieldContentSchema,
+    required: [true, 'Field content schema not defined'],
+  },
 });
 module.exports = mongoose.model('TextType', textTypeSchema);
