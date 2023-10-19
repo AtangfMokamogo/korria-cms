@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const ImageType = require('../models/image');
-const TextField = require('../models/text');
+const TextType = require('../models/text');
 const jsonifyTextType = require('../utils/json.utils');
 const { validateReqSchema } = require('../utils/schema.utils');
 
@@ -141,8 +141,8 @@ class TypeController {
   static async serveImageFile(req, res) {
     try {
       const basePath = path.join(__dirname, '..', 'uploads', 'content', `${req.project}`, 'images');
-      const imageToDelete = `${req.imagename}`;
-      const filePath = path.join(basePath, imageToDelete);
+      const imageToServe = `${req.imagename}`;
+      const filePath = path.join(basePath, imageToServe);
 
       if (fs.existsSync(filePath)) {
         res.status(200).sendFile(filePath);
@@ -160,7 +160,7 @@ class TypeController {
   static async addText(req, res) {
     const validTextSchema = ['title', 'data_type', 'payload'];
     const isValidBody = await validateReqSchema(req, validTextSchema);
-    const basePath = path.join(__dirname, '..', 'uploads', `${req.project}`, 'texts', Object.prototype.hasOwnProperty.call(req.body, 'order') ? req.body.order : 'project-texts');
+    const basePath = path.join(__dirname, '..', 'uploads', 'content', `${req.project}`, 'texts');
 
     const jsonSaveState = await jsonifyTextType(basePath, req.body, req.project, req.body.order);
     if (jsonSaveState.code === 0) {
@@ -168,14 +168,14 @@ class TypeController {
     }
 
     if (isValidBody.code === 0) {
-      const textField = new TextField({
+      const textField = new TextType({
         title: req.body.title,
         type: req.body.type,
         payload: req.body.payload,
         tags: req.body.tags || [`admin-${req.body.type}`],
         createdby: req.user.email,
         project: req.project,
-        order: Object.prototype.hasOwnProperty.call(req.body, 'order') ? req.body.order : 'project-texts',
+        order: Object.prototype.hasOwnProperty.call(req.body, 'order') ? req.body.order : `${req.project}`,
       });
       textField.save(textField).then(
         (data) => {
@@ -202,6 +202,48 @@ class TypeController {
           console.error('Error in newType function', error);
         },
       );
+    }
+  }
+
+  /**
+   * This function retrieves all texts data in a project
+   */
+  static async getText(req, res) {
+    try {
+      const files = await TextType.find({ project: req.project });
+      if (files.length === 0) {
+        res.send({ status: 'Success', message: 'There no files to show' });
+      }
+      res.status(200).send({
+        status: 'Success',
+        content: files,
+      });
+    } catch (error) {
+      console.error('Error in getText controller', error);
+      res.status(500);
+    }
+  }
+
+  /**
+   * This function deletes a text type from project by its id
+   */
+  static async deleteText(req, res) {
+    try {
+      const deleted = await TextType.deleteOne({ project: req.project, _id: req.id });
+      if (deleted.deletedCount !== 0) {
+        res.status(200).send({
+          status: 'Success',
+          message: `Deleted: ${deleted.deletedCount} parcel of ID: ${req.id} from project: ${req.project}`,
+        });
+      }
+      res.status(400).send({
+        status: 'Failed',
+        error: `Text data of id: ${req.id} or Project: ${req.project} not available, check the list of available projects`,
+        message: `No text types of ID: ${req.id} in project: ${req.project}. Deleted ${deleted.deletedCount} texts`,
+      });
+    } catch (error) {
+      console.error('Error in deleteText controller', error);
+      res.status(500);
     }
   }
 }

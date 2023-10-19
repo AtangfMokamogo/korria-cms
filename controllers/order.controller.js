@@ -34,7 +34,7 @@ class OrderController {
         res.status(201).send({
           message: 'collection added succesfully!',
 
-          name: `Order: ${data.name}`,
+          name: data.name,
           project: data.project,
           createdby: data.createdby,
           date: data.createdon,

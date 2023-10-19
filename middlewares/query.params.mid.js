@@ -1,16 +1,27 @@
 /** middleware that process request query and route parameters */
-
+const Project = require('../models/project');
 /**
  * This middleware processes route parameters for Order routes
  */
 async function getParams(req, res, next) {
   /** extract the projectname parameter from route */
   const { projectname, imagename } = req.params;
-
-  if (!projectname) {
-    res.status(400).send({ message: 'Project name not supplied. Check URL' });
-  } else {
-    req.project = projectname;
+  console.log(projectname);
+  if (projectname) {
+    await Project.findOne({ name: projectname, createdby: req.user.email }).then((doc) => {
+      console.log(doc);
+      if (doc === null) {
+        res.status(400).send({
+          status: 'Failed',
+          error: 'Project not found',
+          message: `The requested resource cannot be found in project ${projectname}. Spelling issues? Or create a new one with name ${projectname}`,
+        });
+      } else {
+        req.project = projectname;
+      }
+    }).catch((error) => {
+      console.log(error);
+    });
   }
   if (imagename !== null || imagename !== undefined) {
     req.imagename = imagename;

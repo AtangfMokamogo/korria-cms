@@ -37,17 +37,31 @@ async function validateParcelTypeSchema(req) {
     }
     console.log(fields);
     for (const field of fields) {
-      if (!Object.prototype.hasOwnProperty.call(field, 'name') && !Object.prototype.hasOwnProperty.call(field, 'data_type')) {
+      if (!Object.prototype.hasOwnProperty.call(field, 'fieldtype') && !Object.prototype.hasOwnProperty.call(field, 'content')) {
         return {
           code: 1,
           message: 'Field has no name and/or data-type defined',
         };
       }
-      if (field.data_type === 'image') {
+      if (field.type === 'image') {
         if (!Object.prototype.hasOwnProperty.call(field, 'alt') && !Object.hasOwnProperty.call(field, 'src')) {
           return {
             code: 1,
-            message: `Missing image alt/src fields in ${field.name}`,
+            message: `Missing image alt/src fields in ${field.type}`,
+          };
+        }
+        return {
+          code: 0,
+          message: 'Valid',
+        };
+      }
+
+      if (field.fieldtype === 'text') {
+        console.log('here');
+        if (!Object.prototype.hasOwnProperty.call(field.content, 'title') && !Object.hasOwnProperty.call(field.content, 'payload')) {
+          return {
+            code: 1,
+            message: `Missing text title or payload fields in ${field.fieldtype}`,
           };
         }
         return {

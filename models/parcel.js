@@ -6,9 +6,20 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
+const fieldTypeSchema = new Schema({
+  fieldtype: {
+    type: String,
+    required: [true, 'The Parcel has no defined fieldtype '],
+  },
+  content: {
+    type: Object,
+    required: [true, 'Define the content for fieldtype schema'],
+  },
+});
+
 const fieldSchema = new Schema({
   fields: {
-    type: [Object],
+    type: [fieldTypeSchema],
     required: [true, 'The Parcel has no defined Fields'],
   },
 });
@@ -21,6 +32,9 @@ const parcelSchema = new Schema({
   project: {
     type: String,
     required: [true, 'Parcel does not define a project name'],
+  },
+  order: {
+    type: String,
   },
   schema: {
     type: fieldSchema,

@@ -3,7 +3,7 @@ const path = require('path');
 const express = require('express');
 const TypeController = require('../controllers/type.controller');
 const verifyToken = require('../middlewares/auth.mid');
-const { getParams } = require('../middlewares/query.params.mid');
+const { getParams, getQueryId } = require('../middlewares/query.params.mid');
 
 const router = express.Router();
 
@@ -26,7 +26,9 @@ router.post('/:projectname/content/image/delete', verifyToken, getParams, TypeCo
 router.get('/:projectname/content/image/all', verifyToken, getParams, TypeController.getImages);
 
 /** Text Field Defining Routes */
-router.post('/:projectname/content/newText', verifyToken, getParams, TypeController.addText);
+router.post('/:projectname/content/text/new', verifyToken, getParams, TypeController.addText);
+router.get('/:projectname/content/text/all', verifyToken, getParams, TypeController.getText);
+router.get('/:projectname/content/text/delete', verifyToken, getParams, getQueryId);
 
 /** Image Content Routes */
 router.get('/:projectname/images/:imagename', TypeController.serveImageFile);

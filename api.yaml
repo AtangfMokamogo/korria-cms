@@ -897,6 +897,16 @@ paths:
                       type: array
                       items:
                         type: object
+                        example: {
+                          fieldtype: 'text',
+                          content: {
+                            title: 'Blog Heading',
+                            payload: 'Korria launch a success!',
+                            tags: ['korria', 'launch', '#MustRead'],
+                            project: 'Korria Blog site',
+                            order: 'Blogs',
+                          }
+                        }
                 tags:
                   type: array
                   items:

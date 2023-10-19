@@ -15,7 +15,7 @@ class ParcelController {
     /** Validate the request body */
     const isValidBody = await validateReqSchema(req, validReqBodyKeys);
     const isValidParcelSchema = await validateParcelTypeSchema(req);
-    console.log(isValidBody, isValidParcelSchema);
+    console.log(isValidBody, isValidParcelSchema, req.project);
 
     if (isValidBody.code === -1) {
       res.status(400).send({
@@ -37,6 +37,7 @@ class ParcelController {
       const parcel = new Parcel({
         name: req.body.type,
         project: req.project,
+        order: req.body.order,
         schema: req.body.schema,
         tags: req.body.tags || [`${req.body.type}`],
         createdby: req.user.email,
@@ -49,6 +50,7 @@ class ParcelController {
             message: 'Parcel Type added succesfully!',
             name: `${data.name}`,
             project: data.project,
+            order: data.order,
             tags: data.tags,
             createdby: data.createdby,
             date: data.createdon,
