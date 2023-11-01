@@ -88,7 +88,7 @@ You should receive a confirmation if server has started succesfully
 
 **To Use Korria either familiarity with REST API CLIENTS like Postman is beneficial but not really a stringent requirement**
 
-Users who are unfamiliar with Postman will can access the swagger-ui docs page using:
+Users who are unfamiliar with Postman can access the interactive swagger-ui docs page using:
 
 ```javascript
 http:localhost:8080/api-docs
