@@ -86,7 +86,7 @@ You should receive a confirmation if server has started succesfully
 :exclamation:
 > Korria Headless CMS does not implement a front end dashboard for managing the content. While the scope of developing viable front end application is beyond my knowledge, the code is laid out in a simple and straight forward manner, allowing anyone experienced in front end technologies to develop a dashboard with their chosen tools.
 
-**To Use Korria either familiarity with REST API CLIENTS like Postman is beneficial but not really a stringent requirement**
+**To Use Korria familiarity with REST API CLIENTS like Postman is beneficial but not really a stringent requirement**
 
 Users who are unfamiliar with Postman can access the interactive swagger-ui docs page using:
 
