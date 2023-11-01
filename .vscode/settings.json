@@ -1,5 +1,6 @@
 {
     "yaml.schemas": {
         "openapi:v3": "file:///home/fino/Documents/korria-cms/api.yaml"
-    }
+    },
+    "liveServer.settings.port": 5501
 }
