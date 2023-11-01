@@ -21,6 +21,7 @@
 
 - [About](#about)
 - [Getting Started](#getting_started)
+- [Installation](#installing)
 - [Deployment](#deployment)
 - [Usage](#usage)
 - [Built Using](#built_using)
@@ -34,85 +35,160 @@
 This project was carried out as part of the ALX SE webstack portfolio project (Backend Specialisation track).
 
 ---
-:exclamation: ```NOTE TO ALX REVIEWER```
-> This Project is an initial test implementation of the **Headless CMS**. While the functionality discussed in this document is works as expected, There were some noticeable pain points during development that kept the API implementation at a minimal state. That being said, i found it necessary to begin the project on a new slate. Please see attached github repo below to view the current state of implementation
+## :exclamation: ```NOTE TO ALX REVIEWER```
+> This Project is an initial test implementation of the **Headless CMS**. While the functionality discussed in this document is works as expected, There were some noticeable pain points during development that kept the API implementation at a minimal state. That being said, i found it necessary to begin the project on a new slate. Please see attached github repo below to view the progress of **Korria Version 2**
 
 ###### [Korria-CMS Version 2 Repo](https://github.com/AtangfMokamogo/korria-cms-2.0)
 
 ---
+
 ## 🏁 Getting Started <a name = "getting_started"></a>
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See [deployment](#deployment) for notes on how to deploy the project on a live system.
 
+---
+
 ### Prerequisites
 
-What things you need to install the software and how to install them.
+- This project was developed in NodeJS and use Javascript (ES6). Familiarity with **npm** and running node apps is Expected
 
-```
-Give examples
-```
+- To start clone this repository..
 
-### Installing
+  ```sh
+  git clone https://github.com/AtangfMokamogo/korria-cms.git
+  ```
 
-A step by step series of examples that tell you how to get a development env running.
+- then proceed to [Installation](#installing)
 
-Say what the step will be
+---
 
-```
-Give the example
-```
+## 🏁 Installation <a name = "installing"></a>
 
-And repeat
 
-```
-until finished
-```
+- `cd` into the cloned directory.
 
-End with an example of getting some data out of the system or using it for a little demo.
+- run the installation script
 
-## 🔧 Running the tests <a name = "tests"></a>
-
-Explain how to run the automated tests for this system.
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
+```sh
+   ./installer.sh
 ```
 
-### And coding style tests
+- After all packages have been installed. run the server with
 
-Explain what these tests test and why
+```sh
+npm start
+```
 
-```
-Give an example
-```
+You should receive a confirmation if server has started succesfully
+
+ <img width=500px height=100px src="./korria-server.png" alt="Project logo"></a>
 
 ## 🎈 Usage <a name="usage"></a>
 
-Add notes about how to use the system.
+:exclamation:
+> Korria Headless CMS does not implement a front end dashboard for managing the content. While the scope of developing viable front end application is beyond my knowledge, the code is laid out in a simple and straight forward manner, allowing anyone experienced in front end technologies to develop a dashboard with their chosen tools.
+
+**To Use Korria either familiarity with REST API CLIENTS like Postman is beneficial but not really a stringent requirement**
+
+Users who are unfamiliar with Postman will can access the swagger-ui docs page using:
+
+```javascript
+http:localhost:8080/api-docs
+```
 
 ## 🚀 Deployment <a name = "deployment"></a>
 
-Add additional notes about how to deploy this on a live system.
+Korria CMS is a node app that runs an Express Js server, hence can be deployed to Hosting Agents that support NodeJS apps. Below is an example of how you can deploy Korria to an NGINX web server
+
+---
+###### Deploying an Korria-CMS App with NGINX
+
+## Prerequisites
+
+Before you start, make sure you have the following:
+
+- [Korria CMS Code](https://github.com/AtangfMokamogo/korria-cms)
+- A server with NGINX installed
+- Node.js and npm installed on your server **(if you followed the Install instructions in this page you should have the packages installed already)**
+
+##### Step 1: Install Your Korria-CMS Application
+
+First, you need to install your Korria-CMS application on your server. You can do this by cloning your application from your Git repository, or by uploading your application files directly to your server.
+
+```sh
+git clone https://github.com/AtangfMokamogo/korria-cms.git
+cd korria-cms
+npm i -y
+```
+
+##### Step 2: Start Your Korria-CMS Application
+
+You can start your Korria-CMS application with the `npm start` command. However, for a production environment, you should use a process manager like PM2 to keep your application running even after the server restarts.
+
+```sh
+npm install pm2 -g
+pm2 start app.js
+```
+
+##### Step 3: Configure NGINX
+
+Next, you need to configure NGINX to proxy requests to your Korria-CMS application. Open the default NGINX configuration file in a text editor:
+
+```sh
+sudo nano /etc/nginx/sites-available/default
+```
+
+And add the following configuration:
+
+```nginx
+server {
+    listen 80;
+
+    location / {
+        proxy_pass http://localhost:3000; # replace with the port your app runs on
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+```
+
+Save and close the file when you're finished.
+
+##### Step 4: Restart NGINX
+
+Finally, restart NGINX to apply the changes:
+
+```sh
+sudo service nginx restart
+```
+
+Now, you should be able to access your Korria-CMS instance at your server's IP address or domain name.
+
+---
+
+Once Korria is deployed head to ```http://localhost/korria-docs/``` you will get a live interaction with the API. The documentation is intuitive, the endpoints are arranged in a logical flow of how a user will likely interact with the application.
+
+> If you have any challenges navigating the API or setting up a project, I invite you to watch the demo video of the application here: [Korria CMS Demo](https://youtu.be/4J-Q-rqtjT0)
+
+
 
 ## ⛏️ Built Using <a name = "built_using"></a>
 
 - [MongoDB](https://www.mongodb.com/) - Database
 - [Express](https://expressjs.com/) - Server Framework
-- [VueJs](https://vuejs.org/) - Web Framework
 - [NodeJs](https://nodejs.org/en/) - Server Environment
+- [Swagger-UI](https://swagger.io/tools/swagger-ui/)
 
 ## ✍️ Authors <a name = "authors"></a>
 
-- [@kylelobo](https://github.com/kylelobo) - Idea & Initial work
+- [Atang Fino Mokamogo](https://github.com/atangfmokamogo) - Idea & Initial work
 
-See also the list of [contributors](https://github.com/kylelobo/The-Documentation-Compendium/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/atangfmokamogo/korria-cms/contributors) who participated in this project.
 
 ## 🎉 Acknowledgements <a name = "acknowledgement"></a>
 
-- Hat tip to anyone whose code was used
-- Inspiration
-- References
+* **Project Inspiration**
+Korria CMS attempts to implement a headless cms with the minimal most features
