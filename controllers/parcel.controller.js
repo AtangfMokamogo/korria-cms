@@ -71,7 +71,7 @@ class ParcelController {
   static async getParcels(req, res) {
     /** Return all projects */
     try {
-      const parcels = await Parcel.find({ project: req.project });
+      const parcels = await Parcel.find({ project: req.project }).sort({ createdon: -1 });
       if (parcels.length === 0) {
         res.send({ status: 'Success', message: 'There no parcels to show' });
       }

@@ -19,17 +19,6 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
-  role: {
-    type: String,
-    default: 'admin',
-  },
-  created: {
-    type: Date,
-    default: Date.now,
-  },
-  lastlogin: {
-    type: Date,
-  },
 });
 
 module.exports = mongoose.model('User', userSchema);

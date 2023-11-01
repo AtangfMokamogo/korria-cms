@@ -3,6 +3,7 @@ const fs = require('fs');
 const express = require('express');
 const YAML = require('js-yaml');
 const swaggerUi = require('swagger-ui-express');
+const cors = require('cors');
 const { dbConnect } = require('./utils/db.mongo');
 const authRoutes = require('./routes/auth.routes');
 const projectRoutes = require('./routes/project.routes');
@@ -14,6 +15,8 @@ const swaggerJsdoc = YAML.load(fs.readFileSync('./api.yaml', 'utf8'));
 
 dbConnect();
 const app = express();
+
+app.use(cors());
 // serve static files
 app.use(express.static(__dirname));
 app.use('*.css', (req, res, next) => {
