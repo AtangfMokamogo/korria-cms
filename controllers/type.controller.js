@@ -43,7 +43,7 @@ class TypeController {
     const imagetype = new ImageType({
       title: `${req.body.title}${path.extname(req.file.originalname)}`,
       type: req.body.type,
-      src: `localhost:8080/uploads/content/${req.project}/images/${req.body.title}${path.extname(req.file.originalname)}`,
+      src: `http://localhost:8080/uploads/content/${req.project}/images/${req.body.title}${path.extname(req.file.originalname)}`,
       alt: req.body.alt,
       order: req.body.order,
       project: req.project,
