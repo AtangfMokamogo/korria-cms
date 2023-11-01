@@ -191,4 +191,8 @@ See also the list of [contributors](https://github.com/atangfmokamogo/korria-cms
 ## 🎉 Acknowledgements <a name = "acknowledgement"></a>
 
 * **Project Inspiration**
-Korria CMS attempts to implement a headless cms with the minimal most features
+Korria CMS attempts to implement a headless cms with the minimal most features. This simplicity is inspired by [DatoCMS](https://www.datocms.com/) and the project implements (in code) a similar user workflow.
+
+
+     **A BIG SHOUT OUT TO ALX STUDENT COMMUNITY**
+* A big thank you to ALX Student communities for insight as to how to improve the project going forward, the current work on [Korria-CMS-2.0](https://github.com/AtangfMokamogo/korria-cms-2.0) could have not been possible without this!!
