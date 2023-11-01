@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`validateParcelTypeSchema function should handle errors and return a code of -1 1`] = `
+{
+  "code": -1,
+  "message": "Invalid, content type data missing in the schema",
+}
+`;
+
+exports[`validateParcelTypeSchema function should return valid for a valid schema with image type 1`] = `
+{
+  "code": 1,
+  "message": "Field has no name and/or data-type defined",
+}
+`;
+
+exports[`validateParcelTypeSchema function should return valid for a valid schema with text type 1`] = `
+{
+  "code": 0,
+  "message": "Valid",
+}
+`;
+
+exports[`validateReqSchema function should handle errors and return a code of -1 1`] = `undefined`;
+
+exports[`validateReqSchema function should return missing keys when some required keys are not present 1`] = `
+{
+  "code": -1,
+  "message": [
+    "key2",
+  ],
+}
+`;
+
+exports[`validateReqSchema function should return valid when all required keys are present 1`] = `
+{
+  "code": 0,
+  "message": "valid",
+}
+`;

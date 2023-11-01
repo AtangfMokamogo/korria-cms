@@ -5,7 +5,7 @@ async function jsonifyTextType(storagePath, JSONObj, projectName, jsonKey) {
   try {
     const filePath = path.join(storagePath, `${projectName}.json`);
     fs.mkdirSync(storagePath, { recursive: true });
-    fs.chmod(storagePath, 0o770, () => console.log('permit copy'));
+    fs.chmod(storagePath, 0o770, () => {});
 
     /** check if file exists */
     if (fs.existsSync(filePath)) {

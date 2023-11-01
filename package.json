@@ -4,6 +4,7 @@
   "description": "A minimal headless Content Management System",
   "main": "app.js",
   "scripts": {
+    "test": "jest",
     "lint": "./node_modules/.bin/eslint"
   },
   "author": "Atang Fino Mokamogo",
