@@ -55,8 +55,6 @@ describe('validateParcelTypeSchema function', () => {
     expect(result).toMatchSnapshot();
   });
 
-  // Add more test cases for different scenarios
-
   it('should handle errors and return a code of -1', async () => {
     const req = { body: { schema: { fields: null } } };
     const result = await validateParcelTypeSchema(req);
