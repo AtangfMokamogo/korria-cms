@@ -99,7 +99,7 @@ http:localhost:8080/api-docs
 Korria CMS is a node app that runs an Express Js server, hence can be deployed to Hosting Agents that support NodeJS apps. Below is an example of how you can deploy Korria to an NGINX web server
 
 ---
-###### Deploying an Korria-CMS App with NGINX
+#### Deploying an Korria-CMS App with NGINX
 
 ## Prerequisites
 
