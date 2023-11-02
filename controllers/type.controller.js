@@ -79,7 +79,7 @@ class TypeController {
    */
   static async getImages(req, res) {
     try {
-      const files = await ImageType.find({ project: req.project });
+      const files = await ImageType.find({ project: req.project }).sort({ createdon: -1 });
       if (files.length === 0) {
         res.send({ status: 'Success', message: 'There no files to show' });
       }
@@ -173,12 +173,12 @@ class TypeController {
     if (isValidBody.code === 0) {
       const textField = new TextType({
         fieldtype: req.body.fieldtype,
+        project: req.project,
         content: {
           title: req.body.content.title,
           payload: req.body.content.payload,
           tags: req.body.content.tags || [`admin-${req.body.type}`],
           createdby: req.user.email,
-          project: req.project,
           order: Object.prototype.hasOwnProperty.call(req.body.content, 'order') ? req.body.content.order : `${req.project}`,
         },
       });
@@ -217,6 +217,7 @@ class TypeController {
   static async getText(req, res) {
     try {
       const files = await TextType.find({ project: req.project });
+      console.log(files);
       if (files.length === 0) {
         res.send({ status: 'Success', message: 'There no files to show' });
       }

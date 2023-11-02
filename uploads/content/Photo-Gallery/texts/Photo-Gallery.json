@@ -1,0 +1,70 @@
+{
+  "undefined": [
+    {
+      "fieldtype": "text",
+      "content": {
+        "title": "Gallery Description",
+        "payload": "A test photo album website for korria",
+        "tags": [
+          "Korria Gallery"
+        ],
+        "order": "Blogs"
+      }
+    },
+    {
+      "fieldtype": "text",
+      "content": {
+        "title": "Gallery Description",
+        "payload": "A test photo album website for korria",
+        "tags": [
+          "Korria Gallery"
+        ],
+        "order": "Blogs"
+      }
+    },
+    {
+      "fieldtype": "text",
+      "content": {
+        "title": "Gallery Description",
+        "payload": "A test photo album website for korria",
+        "tags": [
+          "Korria Gallery"
+        ],
+        "order": "Blogs"
+      }
+    },
+    {
+      "fieldtype": "text",
+      "content": {
+        "title": "Gallery Description",
+        "payload": "A test photo album website for korria",
+        "tags": [
+          "Korria Gallery"
+        ],
+        "order": "Blogs"
+      }
+    },
+    {
+      "fieldtype": "text",
+      "content": {
+        "title": "Gallery Description",
+        "payload": "A test photo album website for korria",
+        "tags": [
+          "Korria Gallery"
+        ],
+        "order": "Blogs"
+      }
+    },
+    {
+      "fieldtype": "text",
+      "content": {
+        "title": "Gallery Description",
+        "payload": "A test photo album website for korria",
+        "tags": [
+          "Korria Gallery"
+        ],
+        "order": "Blogs"
+      }
+    }
+  ]
+}

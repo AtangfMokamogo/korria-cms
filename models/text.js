@@ -14,9 +14,6 @@ const fieldContentSchema = new Schema({
   tags: {
     type: [String],
   },
-  project: {
-    type: String,
-  },
   order: {
     type: String,
   },
@@ -30,6 +27,9 @@ const textTypeSchema = new Schema({
   fieldtype: {
     type: String,
     required: [true, 'Field type not defined'],
+  },
+  project: {
+    type: String,
   },
   content: {
     type: fieldContentSchema,

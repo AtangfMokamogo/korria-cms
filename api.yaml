@@ -897,7 +897,7 @@ paths:
                       type: array
                       items:
                         type: object
-                        example: {
+                        example: [{
                           fieldtype: 'text',
                           content: {
                             title: 'Blog Heading',
@@ -906,7 +906,15 @@ paths:
                             project: 'Korria Blog site',
                             order: 'Blogs',
                           }
-                        }
+                          },
+                          {
+                            fieldtype: 'image',
+                            content: {
+                              title: 'my-image',
+                              src: 'http://localhost:8080/uploads/content/new-project/images/desert-post-image.jpg',
+                              alt: 'an aerial shot of sunrise over mounatins in the desert'
+                            }
+                          }]
                 tags:
                   type: array
                   items:

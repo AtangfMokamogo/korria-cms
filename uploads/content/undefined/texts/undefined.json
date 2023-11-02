@@ -21,6 +21,17 @@
         ],
         "order": "Blog Post"
       }
+    },
+    {
+      "fieldtype": "text",
+      "content": {
+        "title": "Blog Heading",
+        "payload": "Korria Blog finally launches",
+        "tags": [
+          "Korria Blog"
+        ],
+        "order": "Blog Posts"
+      }
     }
   ]
 }
