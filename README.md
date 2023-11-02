@@ -34,7 +34,7 @@ This project was carried out as part of the ALX SE webstack portfolio project (B
 
 ---
 ## :exclamation: ```NOTE TO ALX REVIEWER```
-> This Project is an initial test implementation of the **Headless CMS**. While the functionality discussed in this document is works as expected, There were some noticeable pain points during development that kept the API implementation at a minimal state. That being said, i found it necessary to begin the project on a new slate. Please see attached github repo below to view the progress of **Korria Version 2**
+> This Project is an initial test implementation of the **Headless CMS**. While the functionality discussed in this document works as expected, There were some noticeable pain points during development that kept the API implementation at a minimal state. That being said, i found it necessary to begin the project on a new slate. Please see attached github repo below to view the progress of **Korria Version 2**
 
 ###### [Korria-CMS Version 2 Repo](https://github.com/AtangfMokamogo/korria-cms-2.0)
 
@@ -84,9 +84,9 @@ You should receive a confirmation if server has started succesfully
 ## 🎈 Usage <a name="usage"></a>
 
 :exclamation:
-> Korria Headless CMS does not implement a front end dashboard for managing the content. While the scope of developing viable front end application is beyond my knowledge, the code is laid out in a simple and straight forward manner, allowing anyone experienced in front end technologies to develop a dashboard with their chosen tools.
+> Korria Headless CMS does not implement a front end dashboard for managing the content. The scope of developing viable front end application is beyond my knowledge that being said however, the code is laid out in a simple and straight forward manner, allowing anyone experienced in front end technologies to develop a dashboard with their chosen tools.
 
-**To Use Korria familiarity with REST API CLIENTS like Postman is beneficial but not really a stringent requirement**
+**To Use Korria familiarity with REST API CLIENTS like Postman is beneficial but not really a requirement**
 
 Users who are unfamiliar with Postman can access the interactive swagger-ui docs page using:
 
@@ -96,7 +96,7 @@ http:localhost:8080/api-docs
 
 ## 🚀 Deployment <a name = "deployment"></a>
 
-Korria CMS is a node app that runs an Express Js server, hence can be deployed to Hosting Agents that support NodeJS apps. Below is an example of how you can deploy Korria to an NGINX web server
+Korria CMS is a node app that runs an Express Js server and can be deployed to Hosting Agents that support NodeJS apps. Below is an example of how you can deploy Korria to an NGINX web server
 
 ---
 #### Deploying an Korria-CMS App with NGINX
